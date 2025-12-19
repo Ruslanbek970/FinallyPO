@@ -3,8 +3,8 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.example.booking.Enum.UserStatus;
 
+import com.example.booking.Enum.UserStatus;
 import java.util.Set;
 
 @Data
@@ -17,5 +17,6 @@ public class UserResponseDto {
     private String email;
     private String phone;
     private UserStatus status;
-    private Set<String> roles;
+
+    private Set<RoleResponseDto> roles;
 }

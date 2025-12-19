@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.booking.Enum.UnitType;
 
+import com.example.booking.Dto.AmenityResponseDto;
 import java.util.Set;
 
 @Data
@@ -20,5 +21,5 @@ public class UnitResponseDto {
     private int bedsCount;
     private int baseNightPrice;
     private boolean active;
-    private Set<Long> amenityIds;
+    private Set<AmenityResponseDto> amenities;
 }
