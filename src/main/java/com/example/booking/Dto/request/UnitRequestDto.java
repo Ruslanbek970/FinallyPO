@@ -1,9 +1,10 @@
 package com.example.booking.Dto.request;
 
+import com.example.booking.Dto.response.AmenityResponseDto;
+import com.example.booking.Enum.UnitType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.example.booking.Enum.UnitType;
 
 import java.util.Set;
 
@@ -19,5 +20,6 @@ public class UnitRequestDto {
     private int bedsCount;
     private int baseNightPrice;
     private boolean active;
-    private Set<Long> amenityIds;
+
+    private Set<AmenityResponseDto> amenities; // вместо amenityIds
 }

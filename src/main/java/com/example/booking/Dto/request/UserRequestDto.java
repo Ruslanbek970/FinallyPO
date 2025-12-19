@@ -1,9 +1,10 @@
 package com.example.booking.Dto.request;
 
+import com.example.booking.Dto.response.RoleResponseDto;
+import com.example.booking.Enum.UserStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.example.booking.Enum.UserStatus;
 
 import java.util.Set;
 
@@ -17,5 +18,6 @@ public class UserRequestDto {
     private String phone;
     private String password;
     private UserStatus status;
-    private Set<Long> roleIds;
+
+    private Set<RoleResponseDto> roles; // вместо roleIds
 }
