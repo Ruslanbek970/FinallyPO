@@ -1,7 +1,7 @@
 package com.example.booking.Mapper;
 
-import com.example.booking.Dto.PaymentRequestDto;
-import com.example.booking.Dto.PaymentResponseDto;
+import com.example.booking.Dto.request.PaymentRequestDto;
+import com.example.booking.Dto.response.PaymentResponseDto;
 import com.example.booking.Entity.Payment;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

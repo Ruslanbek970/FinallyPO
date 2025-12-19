@@ -1,7 +1,7 @@
 package com.example.booking.Mapper;
 
-import com.example.booking.Dto.RoleRequestDto;
-import com.example.booking.Dto.RoleResponseDto;
+import com.example.booking.Dto.request.RoleRequestDto;
+import com.example.booking.Dto.response.RoleResponseDto;
 import com.example.booking.Entity.Role;
 import org.mapstruct.Mapper;
 

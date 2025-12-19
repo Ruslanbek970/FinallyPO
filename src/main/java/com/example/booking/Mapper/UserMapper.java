@@ -1,7 +1,7 @@
 package com.example.booking.Mapper;
 
-import com.example.booking.Dto.UserRequestDto;
-import com.example.booking.Dto.UserResponseDto;
+import com.example.booking.Dto.response.UserResponseDto;
+import com.example.booking.Dto.request.UserRequestDto;
 import com.example.booking.Entity.User;
 import org.mapstruct.Mapper;
 

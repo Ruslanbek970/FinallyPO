@@ -1,7 +1,7 @@
 package com.example.booking.Mapper;
 
-import com.example.booking.Dto.PropertyRequestDto;
-import com.example.booking.Dto.PropertyResponseDto;
+import com.example.booking.Dto.request.PropertyRequestDto;
+import com.example.booking.Dto.response.PropertyResponseDto;
 import com.example.booking.Entity.Property;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
