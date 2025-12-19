@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.PaymentMethod;
 
 @Data
 @AllArgsConstructor
@@ -10,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class PaymentRequestDto {
     private Long bookingId;
     private int amount;
-    private String method;
+    private PaymentMethod method;
     private String provider;
 }

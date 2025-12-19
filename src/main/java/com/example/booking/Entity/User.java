@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.UserStatus;
 
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,8 @@ public class User {
     private String password;
 
     // ACTIVE / BLOCKED
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private UserStatus status;
 
     @ManyToMany
     @JoinTable(

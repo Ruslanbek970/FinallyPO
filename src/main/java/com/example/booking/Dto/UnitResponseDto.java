@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.UnitType;
 
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 public class UnitResponseDto {
     private Long id;
     private Long propertyId;
-    private String unitType;
+    private UnitType unitType;
     private String nameOrNumber;
     private int capacityAdults;
     private int capacityChildren;

@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.BookingStatus;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,7 +29,8 @@ public class Booking {
     private int children;
 
     // CREATED / CONFIRMED / CANCELLED / COMPLETED
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 
     private int totalPrice;
 

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.PaymentMethod;
+import com.example.booking.Enum.PaymentStatus;
 
 import java.time.LocalDateTime;
 
@@ -21,10 +23,12 @@ public class Payment {
     private int amount;
 
     // CARD / CASH / TRANSFER
-    private String method;
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod method;
 
     // INITIATED / PAID / FAILED / REFUNDED
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private PaymentStatus status;
 
     // Kaspi / Stripe ...
     private String provider;

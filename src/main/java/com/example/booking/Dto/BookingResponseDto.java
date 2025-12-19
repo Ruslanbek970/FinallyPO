@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.BookingStatus;
 
 import java.time.LocalDate;
 
@@ -19,6 +20,6 @@ public class BookingResponseDto {
     private LocalDate checkOut;
     private int adults;
     private int children;
-    private String status;
+    private BookingStatus status;
     private int totalPrice;
 }

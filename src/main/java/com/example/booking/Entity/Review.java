@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.ReviewStatus;
 
 @Entity
 @Data
@@ -22,7 +23,8 @@ public class Review {
     private String comment;
 
     // PENDING / APPROVED / REJECTED
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private ReviewStatus status;
 
     @OneToOne
     @JoinColumn(name = "booking_id")

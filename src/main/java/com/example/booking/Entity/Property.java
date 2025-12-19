@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.PropertyType;
 
 import java.util.List;
 
@@ -19,7 +20,8 @@ public class Property {
     private Long id;
 
     // HOTEL / APARTMENT
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private PropertyType type;
 
     private String name;
 

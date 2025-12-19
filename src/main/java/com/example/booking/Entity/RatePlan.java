@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.CancellationPolicy;
 
 import java.util.List;
 
@@ -23,7 +24,8 @@ public class RatePlan {
     private int pricePerNight;
 
     // FREE_CANCELLATION / NO_REFUND / PARTIAL
-    private String cancellationPolicy;
+    @Enumerated(EnumType.STRING)
+    private CancellationPolicy cancellationPolicy;
 
     private boolean breakfastIncluded;
 

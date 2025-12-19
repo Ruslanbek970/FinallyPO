@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.UserStatus;
 
 import java.util.Set;
 
@@ -15,6 +16,6 @@ public class UserRequestDto {
     private String email;
     private String phone;
     private String password;
-    private String status;
+    private UserStatus status;
     private Set<Long> roleIds;
 }

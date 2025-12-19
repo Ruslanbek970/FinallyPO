@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.UnitType;
 
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,8 @@ public class Unit {
     private Long id;
 
     // ROOM / APARTMENT / STUDIO
-    private String unitType;
+    @Enumerated(EnumType.STRING)
+    private UnitType unitType;
 
     private String nameOrNumber;
 

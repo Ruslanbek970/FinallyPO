@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.ReviewStatus;
 
 @Data
 @AllArgsConstructor
@@ -13,5 +14,5 @@ public class ReviewResponseDto {
     private Long authorId;
     private int rating;
     private String comment;
-    private String status;
+    private ReviewStatus status;
 }

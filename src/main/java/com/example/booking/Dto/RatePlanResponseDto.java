@@ -3,6 +3,7 @@ package com.example.booking.Dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.example.booking.Enum.CancellationPolicy;
 
 @Data
 @AllArgsConstructor
@@ -12,7 +13,7 @@ public class RatePlanResponseDto {
     private Long unitId;
     private String name;
     private int pricePerNight;
-    private String cancellationPolicy;
+    private CancellationPolicy cancellationPolicy;
     private boolean breakfastIncluded;
     private boolean active;
 }
