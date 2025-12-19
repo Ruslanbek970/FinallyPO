@@ -1,0 +1,30 @@
+version: '3.1'
+
+services:
+  main-db:
+    image: 'postgres:15'
+    container_name: 'main-database-container'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "2345:5432"
+    volumes:
+      - main-db-data:/var/lib/postgresql/data
+
+  test-db:
+    image: 'postgres:15'
+    container_name: 'test-database-container'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - "2346:5432"
+    volumes:
+      - test-db-data:/var/lib/postgresql/data
+
+volumes:
+  main-db-data:
+  test-db-data:
