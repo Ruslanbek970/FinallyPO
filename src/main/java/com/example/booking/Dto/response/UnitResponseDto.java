@@ -1,11 +1,10 @@
-package com.example.booking.Dto;
+package com.example.booking.Dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import com.example.booking.Enum.UnitType;
 
-import com.example.booking.Dto.AmenityResponseDto;
 import java.util.Set;
 
 @Data
