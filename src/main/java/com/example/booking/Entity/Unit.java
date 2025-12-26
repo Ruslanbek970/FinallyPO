@@ -20,7 +20,7 @@ public class Unit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ROOM / APARTMENT / STUDIO
+
     @Enumerated(EnumType.STRING)
     private UnitType unitType;
 

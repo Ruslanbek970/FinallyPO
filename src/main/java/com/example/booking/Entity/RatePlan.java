@@ -23,7 +23,7 @@ public class RatePlan {
 
     private int pricePerNight;
 
-    // FREE_CANCELLATION / NO_REFUND / PARTIAL
+
     @Enumerated(EnumType.STRING)
     private CancellationPolicy cancellationPolicy;
 

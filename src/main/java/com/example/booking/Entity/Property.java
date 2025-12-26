@@ -19,7 +19,7 @@ public class Property {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // HOTEL / APARTMENT
+
     @Enumerated(EnumType.STRING)
     private PropertyType type;
 

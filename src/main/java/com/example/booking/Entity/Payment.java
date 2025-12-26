@@ -22,15 +22,15 @@ public class Payment {
 
     private int amount;
 
-    // CARD / CASH / TRANSFER
+
     @Enumerated(EnumType.STRING)
     private PaymentMethod method;
 
-    // INITIATED / PAID / FAILED / REFUNDED
+
     @Enumerated(EnumType.STRING)
     private PaymentStatus status;
 
-    // Kaspi / Stripe ...
+
     private String provider;
 
     private LocalDateTime paidAt;

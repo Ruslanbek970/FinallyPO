@@ -22,7 +22,7 @@ public class Review {
     @Column(length = 2000)
     private String comment;
 
-    // PENDING / APPROVED / REJECTED
+
     @Enumerated(EnumType.STRING)
     private ReviewStatus status;
 

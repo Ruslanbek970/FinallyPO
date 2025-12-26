@@ -31,7 +31,7 @@ public class User {
 
     private String password;
 
-    // ACTIVE / BLOCKED
+
     @Enumerated(EnumType.STRING)
     private UserStatus status;
 

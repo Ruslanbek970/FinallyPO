@@ -18,7 +18,7 @@ public class Amenity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // WIFI / PARKING / POOL ...
+
     private String code;
 
     private String title;

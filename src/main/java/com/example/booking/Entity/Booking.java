@@ -28,7 +28,7 @@ public class Booking {
     private int adults;
     private int children;
 
-    // CREATED / CONFIRMED / CANCELLED / COMPLETED
+
     @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
