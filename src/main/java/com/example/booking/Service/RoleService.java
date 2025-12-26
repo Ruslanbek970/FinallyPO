@@ -6,16 +6,10 @@ import com.example.booking.Dto.response.RoleResponseDto;
 import java.util.List;
 
 public interface RoleService {
-
     RoleResponseDto create(RoleRequestDto dto);
-
     RoleResponseDto update(Long id, RoleRequestDto dto);
-
     RoleResponseDto getById(Long id);
-
-    RoleResponseDto getByName(String name); // ADMIN/USER/MANAGER
-
+    RoleResponseDto getByName(String name);
     List<RoleResponseDto> getAll();
-
     void deleteById(Long id);
 }
