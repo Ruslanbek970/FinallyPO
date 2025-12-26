@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- =========================
+         SEED DATA (DEV)
+    ========================== -->
+
+    <!-- ROLES -->
+    <changeSet id="seed-roles" author="Kasym" context="dev">
+        <insert tableName="roles">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="ROLE_ADMIN"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="ROLE_OWNER"/>
+        </insert>
+        <insert tableName="roles">
+            <column name="id" valueNumeric="3"/>
+            <column name="name" value="ROLE_GUEST"/>
+        </insert>
+    </changeSet>
+
+    <!-- USERS -->
+    <changeSet id="seed-users" author="Kasym" context="dev">
+        <insert tableName="users">
+            <column name="id" valueNumeric="1"/>
+            <column name="first_name" value="Admin"/>
+            <column name="last_name" value="System"/>
+            <column name="email" value="admin@demo.kz"/>
+            <column name="phone" value="+77010000001"/>
+            <column name="password" value="{noop}admin"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" valueNumeric="2"/>
+            <column name="first_name" value="Aruzhan"/>
+            <column name="last_name" value="Nur"/>
+            <column name="email" value="owner@demo.kz"/>
+            <column name="phone" value="+77010000002"/>
+            <column name="password" value="{noop}owner"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="id" valueNumeric="3"/>
+            <column name="first_name" value="Dias"/>
+            <column name="last_name" value="Khan"/>
+            <column name="email" value="guest@demo.kz"/>
+            <column name="phone" value="+77010000003"/>
+            <column name="password" value="{noop}guest"/>
+            <column name="status" value="ACTIVE"/>
+        </insert>
+    </changeSet>
+
+    <!-- USER_ROLES -->
+    <changeSet id="seed-user-roles" author="Kasym" context="dev">
+        <!-- admin -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="1"/>
+            <column name="role_id" valueNumeric="1"/>
+        </insert>
+
+        <!-- owner -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="2"/>
+            <column name="role_id" valueNumeric="2"/>
+        </insert>
+
+        <!-- guest -->
+        <insert tableName="user_roles">
+            <column name="user_id" valueNumeric="3"/>
+            <column name="role_id" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+
+    <!-- AMENITIES -->
+    <changeSet id="seed-amenities" author="Kasym" context="dev">
+        <insert tableName="amenities">
+            <column name="id" valueNumeric="1"/>
+            <column name="code" value="WIFI"/>
+            <column name="title" value="Wi-Fi"/>
+        </insert>
+        <insert tableName="amenities">
+            <column name="id" valueNumeric="2"/>
+            <column name="code" value="BREAKFAST"/>
+            <column name="title" value="Breakfast"/>
+        </insert>
+        <insert tableName="amenities">
+            <column name="id" valueNumeric="3"/>
+            <column name="code" value="PARKING"/>
+            <column name="title" value="Parking"/>
+        </insert>
+    </changeSet>
+
+    <!-- PROPERTIES -->
+    <changeSet id="seed-properties" author="Kasym" context="dev">
+        <insert tableName="properties">
+            <column name="id" valueNumeric="1"/>
+            <column name="type" value="HOTEL"/>
+            <column name="name" value="Narxoz Hotel Almaty"/>
+            <column name="description" value="Demo property for booking project"/>
+            <column name="city" value="Almaty"/>
+            <column name="address" value="Abay Ave 1"/>
+            <column name="owner_id" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+
+    <!-- UNITS -->
+    <changeSet id="seed-units" author="Kasym" context="dev">
+        <insert tableName="units">
+            <column name="id" valueNumeric="1"/>
+            <column name="unit_type" value="ROOM"/>
+            <column name="name_or_number" value="101"/>
+            <column name="capacity_adults" valueNumeric="2"/>
+            <column name="capacity_children" valueNumeric="1"/>
+            <column name="beds_count" valueNumeric="1"/>
+            <column name="base_night_price" valueNumeric="20000"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="property_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="units">
+            <column name="id" valueNumeric="2"/>
+            <column name="unit_type" value="ROOM"/>
+            <column name="name_or_number" value="102"/>
+            <column name="capacity_adults" valueNumeric="3"/>
+            <column name="capacity_children" valueNumeric="2"/>
+            <column name="beds_count" valueNumeric="2"/>
+            <column name="base_night_price" valueNumeric="28000"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="property_id" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+
+    <!-- UNIT_AMENITIES -->
+    <changeSet id="seed-unit-amenities" author="Kasym" context="dev">
+        <!-- unit 1: WIFI + PARKING -->
+        <insert tableName="unit_amenities">
+            <column name="unit_id" valueNumeric="1"/>
+            <column name="amenity_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="unit_amenities">
+            <column name="unit_id" valueNumeric="1"/>
+            <column name="amenity_id" valueNumeric="3"/>
+        </insert>
+
+        <!-- unit 2: WIFI + BREAKFAST + PARKING -->
+        <insert tableName="unit_amenities">
+            <column name="unit_id" valueNumeric="2"/>
+            <column name="amenity_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="unit_amenities">
+            <column name="unit_id" valueNumeric="2"/>
+            <column name="amenity_id" valueNumeric="2"/>
+        </insert>
+        <insert tableName="unit_amenities">
+            <column name="unit_id" valueNumeric="2"/>
+            <column name="amenity_id" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+
+    <!-- RATE_PLANS -->
+    <changeSet id="seed-rate-plans" author="Kasym" context="dev">
+        <insert tableName="rate_plans">
+            <column name="id" valueNumeric="1"/>
+            <column name="name" value="Standard"/>
+            <column name="price_per_night" valueNumeric="20000"/>
+            <column name="cancellation_policy" value="FREE_CANCEL_24H"/>
+            <column name="breakfast_included" valueBoolean="false"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="unit_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="rate_plans">
+            <column name="id" valueNumeric="2"/>
+            <column name="name" value="Breakfast Included"/>
+            <column name="price_per_night" valueNumeric="30000"/>
+            <column name="cancellation_policy" value="NON_REFUNDABLE"/>
+            <column name="breakfast_included" valueBoolean="true"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="unit_id" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+
+    <!-- AVAILABILITY -->
+    <changeSet id="seed-availability" author="Kasym" context="dev">
+        <insert tableName="availability">
+            <column name="id" valueNumeric="1"/>
+            <column name="date" valueDate="2025-12-26"/>
+            <column name="available_count" valueNumeric="5"/>
+            <column name="override_price" valueNumeric="21000"/>
+            <column name="stop_sell" valueBoolean="false"/>
+            <column name="unit_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="availability">
+            <column name="id" valueNumeric="2"/>
+            <column name="date" valueDate="2025-12-27"/>
+            <column name="available_count" valueNumeric="5"/>
+            <column name="override_price" valueNumeric="null"/>
+            <column name="stop_sell" valueBoolean="false"/>
+            <column name="unit_id" valueNumeric="1"/>
+        </insert>
+
+        <insert tableName="availability">
+            <column name="id" valueNumeric="3"/>
+            <column name="date" valueDate="2025-12-26"/>
+            <column name="available_count" valueNumeric="3"/>
+            <column name="override_price" valueNumeric="32000"/>
+            <column name="stop_sell" valueBoolean="false"/>
+            <column name="unit_id" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+
+    <!-- BOOKINGS -->
+    <changeSet id="seed-bookings" author="Kasym" context="dev">
+        <insert tableName="bookings">
+            <column name="id" valueNumeric="1"/>
+            <column name="booking_code" value="BK-20251226-0001"/>
+            <column name="check_in" valueDate="2025-12-26"/>
+            <column name="check_out" valueDate="2025-12-28"/>
+            <column name="adults" valueNumeric="2"/>
+            <column name="children" valueNumeric="0"/>
+            <column name="status" value="CONFIRMED"/>
+            <column name="total_price" valueNumeric="42000"/>
+            <column name="guest_comment" value="Late check-in please"/>
+            <column name="guest_id" valueNumeric="3"/>
+            <column name="unit_id" valueNumeric="1"/>
+            <column name="rate_plan_id" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+
+    <!-- PAYMENTS -->
+    <changeSet id="seed-payments" author="Kasym" context="dev">
+        <insert tableName="payments">
+            <column name="id" valueNumeric="1"/>
+            <column name="amount" valueNumeric="42000"/>
+            <column name="method" value="CARD"/>
+            <column name="status" value="PAID"/>
+            <column name="provider" value="KASPI"/>
+            <column name="paid_at" value="2025-12-26T10:30:00"/>
+            <column name="booking_id" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+
+    <!-- REVIEWS (booking_id must be unique!) -->
+    <changeSet id="seed-reviews" author="Kasym" context="dev">
+        <insert tableName="reviews">
+            <column name="id" valueNumeric="1"/>
+            <column name="rating" valueNumeric="5"/>
+            <column name="comment" value="Everything was great. Clean room, good service."/>
+            <column name="status" value="PUBLISHED"/>
+            <column name="booking_id" valueNumeric="1"/>
+            <column name="author_id" valueNumeric="3"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

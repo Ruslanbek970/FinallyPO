@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- =========================
+         TABLES
+    ========================== -->
+
+    <changeSet id="create-amenities-table" author="Kasym">
+        <createTable tableName="amenities">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="code" type="varchar(255)"/>
+            <column name="title" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-units-table" author="Kasym">
+        <createTable tableName="units">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="unit_type" type="varchar(255)"/>
+            <column name="name_or_number" type="varchar(255)"/>
+
+            <column name="capacity_adults" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="capacity_children" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="beds_count" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="base_night_price" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="property_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-availability-table" author="Kasym">
+        <createTable tableName="availability">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="date" type="date"/>
+
+            <column name="available_count" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="override_price" type="int"/>
+
+            <column name="stop_sell" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="unit_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-users-table" author="Kasym">
+        <createTable tableName="users">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="phone" type="varchar(255)"/>
+            <column name="password" type="varchar(255)"/>
+            <column name="status" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-properties-table" author="Kasym">
+        <createTable tableName="properties">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="type" type="varchar(255)"/>
+            <column name="name" type="varchar(255)"/>
+            <column name="description" type="varchar(2000)"/>
+            <column name="city" type="varchar(255)"/>
+            <column name="address" type="varchar(255)"/>
+            <column name="owner_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-rate-plans-table" author="Kasym">
+        <createTable tableName="rate_plans">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="name" type="varchar(255)"/>
+
+            <column name="price_per_night" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="cancellation_policy" type="varchar(255)"/>
+
+            <column name="breakfast_included" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="active" type="boolean">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="unit_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-bookings-table" author="Kasym">
+        <createTable tableName="bookings">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="booking_code" type="varchar(255)"/>
+            <column name="check_in" type="date"/>
+            <column name="check_out" type="date"/>
+
+            <column name="adults" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="children" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="status" type="varchar(255)"/>
+
+            <column name="total_price" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="guest_comment" type="varchar(1000)"/>
+
+            <column name="guest_id" type="bigint"/>
+            <column name="unit_id" type="bigint"/>
+            <column name="rate_plan_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-payments-table" author="Kasym">
+        <createTable tableName="payments">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="amount" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="method" type="varchar(255)"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="provider" type="varchar(255)"/>
+            <column name="paid_at" type="datetime"/>
+
+            <column name="booking_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-reviews-table" author="Kasym">
+        <createTable tableName="reviews">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="rating" type="int">
+                <constraints nullable="false"/>
+            </column>
+
+            <column name="comment" type="varchar(2000)"/>
+            <column name="status" type="varchar(255)"/>
+
+            <column name="booking_id" type="bigint"/>
+            <column name="author_id" type="bigint"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-roles-table" author="Kasym">
+        <createTable tableName="roles">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints nullable="false" primaryKey="true"/>
+            </column>
+
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-unit-amenities-table" author="Kasym">
+        <createTable tableName="unit_amenities">
+            <column name="amenity_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create-user-roles-table" author="Kasym">
+        <createTable tableName="user_roles">
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- =========================
+         KEYS & CONSTRAINTS
+    ========================== -->
+
+    <changeSet id="pk-unit-amenities" author="Kasym">
+        <addPrimaryKey tableName="unit_amenities"
+                       columnNames="amenity_id, unit_id"
+                       constraintName="pk_unit_amenities"/>
+    </changeSet>
+
+    <changeSet id="pk-user-roles" author="Kasym">
+        <addPrimaryKey tableName="user_roles"
+                       columnNames="role_id, user_id"
+                       constraintName="pk_user_roles"/>
+    </changeSet>
+
+    <changeSet id="uc-reviews-booking-id" author="Kasym">
+        <addUniqueConstraint tableName="reviews"
+                             columnNames="booking_id"
+                             constraintName="uc_reviews_booking"/>
+    </changeSet>
+
+    <changeSet id="uc-users-email" author="Kasym">
+        <addUniqueConstraint tableName="users"
+                             columnNames="email"
+                             constraintName="uc_users_email"/>
+    </changeSet>
+
+    <changeSet id="uc-users-phone" author="Kasym">
+        <addUniqueConstraint tableName="users"
+                             columnNames="phone"
+                             constraintName="uc_users_phone"/>
+    </changeSet>
+
+    <!-- =========================
+         FOREIGN KEYS
+    ========================== -->
+
+    <changeSet id="fk-availability-unit" author="Kasym">
+        <addForeignKeyConstraint baseTableName="availability"
+                                 baseColumnNames="unit_id"
+                                 referencedTableName="units"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_availability_unit"/>
+    </changeSet>
+
+    <changeSet id="fk-bookings-guest" author="Kasym">
+        <addForeignKeyConstraint baseTableName="bookings"
+                                 baseColumnNames="guest_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_bookings_guest"/>
+    </changeSet>
+
+    <changeSet id="fk-bookings-rate-plan" author="Kasym">
+        <addForeignKeyConstraint baseTableName="bookings"
+                                 baseColumnNames="rate_plan_id"
+                                 referencedTableName="rate_plans"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_bookings_rate_plan"/>
+    </changeSet>
+
+    <changeSet id="fk-bookings-unit" author="Kasym">
+        <addForeignKeyConstraint baseTableName="bookings"
+                                 baseColumnNames="unit_id"
+                                 referencedTableName="units"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_bookings_unit"/>
+    </changeSet>
+
+    <changeSet id="fk-payments-booking" author="Kasym">
+        <addForeignKeyConstraint baseTableName="payments"
+                                 baseColumnNames="booking_id"
+                                 referencedTableName="bookings"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_payments_booking"/>
+    </changeSet>
+
+    <changeSet id="fk-properties-owner" author="Kasym">
+        <addForeignKeyConstraint baseTableName="properties"
+                                 baseColumnNames="owner_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_properties_owner"/>
+    </changeSet>
+
+    <changeSet id="fk-rate-plans-unit" author="Kasym">
+        <addForeignKeyConstraint baseTableName="rate_plans"
+                                 baseColumnNames="unit_id"
+                                 referencedTableName="units"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_rate_plans_unit"/>
+    </changeSet>
+
+    <changeSet id="fk-reviews-author" author="Kasym">
+        <addForeignKeyConstraint baseTableName="reviews"
+                                 baseColumnNames="author_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_reviews_author"/>
+    </changeSet>
+
+    <changeSet id="fk-reviews-booking" author="Kasym">
+        <addForeignKeyConstraint baseTableName="reviews"
+                                 baseColumnNames="booking_id"
+                                 referencedTableName="bookings"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_reviews_booking"/>
+    </changeSet>
+
+    <changeSet id="fk-units-property" author="Kasym">
+        <addForeignKeyConstraint baseTableName="units"
+                                 baseColumnNames="property_id"
+                                 referencedTableName="properties"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_units_property"/>
+    </changeSet>
+
+    <changeSet id="fk-unit-amenities-amenity" author="Kasym">
+        <addForeignKeyConstraint baseTableName="unit_amenities"
+                                 baseColumnNames="amenity_id"
+                                 referencedTableName="amenities"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_unit_amenities_amenity"/>
+    </changeSet>
+
+    <changeSet id="fk-unit-amenities-unit" author="Kasym">
+        <addForeignKeyConstraint baseTableName="unit_amenities"
+                                 baseColumnNames="unit_id"
+                                 referencedTableName="units"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_unit_amenities_unit"/>
+    </changeSet>
+
+    <changeSet id="fk-user-roles-role" author="Kasym">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="role_id"
+                                 referencedTableName="roles"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_roles_role"/>
+    </changeSet>
+
+    <changeSet id="fk-user-roles-user" author="Kasym">
+        <addForeignKeyConstraint baseTableName="user_roles"
+                                 baseColumnNames="user_id"
+                                 referencedTableName="users"
+                                 referencedColumnNames="id"
+                                 constraintName="fk_user_roles_user"/>
+    </changeSet>
+
+</databaseChangeLog>
