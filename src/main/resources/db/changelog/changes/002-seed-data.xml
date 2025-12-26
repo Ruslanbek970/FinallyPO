@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- ROLES -->
+    <changeSet id="seed-roles" author="team">
+        <insert tableName="roles"><column name="name" value="ROLE_ADMIN"/></insert>
+        <insert tableName="roles"><column name="name" value="ROLE_MANAGER"/></insert>
+        <insert tableName="roles"><column name="name" value="ROLE_USER"/></insert>
+    </changeSet>
+
+    <!-- USERS (passwords: Admin123!, Manager123!, User123!) -->
+    <changeSet id="seed-users" author="team">
+        <insert tableName="users">
+            <column name="email" value="admin@booking.kz"/>
+            <column name="password_hash" value="$2a$10$yXn3c2j0Nq8hJd1.2sOqCevxL0a7jv1Z8wH0oCqZ8d8yShg4kT3d6"/>
+            <column name="full_name" value="System Admin"/>
+            <column name="phone" value="+7 777 111 11 11"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="email" value="manager@booking.kz"/>
+            <column name="password_hash" value="$2a$10$A5jU5wq8VnCwqk1Xq8iR1e0JcJ7eZ8E6bU1cD7X7ZlGv0v3QbJ0b2"/>
+            <column name="full_name" value="Hotel Manager"/>
+            <column name="phone" value="+7 777 222 22 22"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+
+        <insert tableName="users">
+            <column name="email" value="user@booking.kz"/>
+            <column name="password_hash" value="$2a$10$4kqkW2p3xT6D3J3x5SxZbO5zUO1C8cZ1jHqZlqXwP5e5l7m9e7T5G"/>
+            <column name="full_name" value="Regular User"/>
+            <column name="phone" value="+7 777 333 33 33"/>
+            <column name="active" valueBoolean="true"/>
+        </insert>
+    </changeSet>
+
+    <!-- USERS_ROLES (без жестких id) -->
+    <changeSet id="seed-users-roles" author="team">
+        <insert tableName="users_roles">
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='admin@booking.kz')"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_ADMIN')"/>
+        </insert>
+
+        <insert tableName="users_roles">
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='manager@booking.kz')"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_MANAGER')"/>
+        </insert>
+
+        <insert tableName="users_roles">
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='user@booking.kz')"/>
+            <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_USER')"/>
+        </insert>
+    </changeSet>
+
+    <!-- cities -->
+    <changeSet id="seed-cities" author="team">
+        <insert tableName="cities"><column name="name" value="Almaty"/><column name="country" value="Kazakhstan"/></insert>
+        <insert tableName="cities"><column name="name" value="Astana"/><column name="country" value="Kazakhstan"/></insert>
+        <insert tableName="cities"><column name="name" value="Shymkent"/><column name="country" value="Kazakhstan"/></insert>
+    </changeSet>
+
+    <!-- amenities -->
+    <changeSet id="seed-amenities" author="team">
+        <insert tableName="amenities"><column name="name" value="Wi-Fi"/></insert>
+        <insert tableName="amenities"><column name="name" value="Breakfast"/></insert>
+        <insert tableName="amenities"><column name="name" value="Pool"/></insert>
+        <insert tableName="amenities"><column name="name" value="Parking"/></insert>
+    </changeSet>
+
+    <!-- hotel + rooms -->
+    <changeSet id="seed-hotels-rooms" author="team">
+        <insert tableName="hotels">
+            <column name="name" value="Rixos Almaty"/>
+            <column name="address" value="Seifullin Ave 506, Almaty"/>
+            <column name="description" value="Premium hotel in the city center."/>
+            <column name="rating" valueNumeric="4.7"/>
+            <column name="active" valueBoolean="true"/>
+            <column name="city_id" valueComputed="(SELECT id FROM cities WHERE name='Almaty')"/>
+            <column name="manager_id" valueComputed="(SELECT id FROM users WHERE email='manager@booking.kz')"/>
+        </insert>
+
+        <insert tableName="rooms">
+            <column name="room_number" value="101"/>
+            <column name="type" value="STANDARD"/>
+            <column name="price_per_night" valueNumeric="45000"/>
+            <column name="capacity" valueNumeric="2"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotels WHERE name='Rixos Almaty')"/>
+        </insert>
+
+        <insert tableName="rooms">
+            <column name="room_number" value="202"/>
+            <column name="type" value="DELUXE"/>
+            <column name="price_per_night" valueNumeric="70000"/>
+            <column name="capacity" valueNumeric="3"/>
+            <column name="available" valueBoolean="true"/>
+            <column name="hotel_id" valueComputed="(SELECT id FROM hotels WHERE name='Rixos Almaty')"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
