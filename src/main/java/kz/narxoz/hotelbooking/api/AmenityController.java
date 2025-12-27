@@ -19,32 +19,30 @@ public class AmenityController {
     private final AmenityService amenityService;
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        List<AmenityResponseDto> list = amenityService.getAll();
-        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<AmenityResponseDto>> getAll() {
+        return ResponseEntity.ok(amenityService.getAll());
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> create(@RequestBody AmenityRequestDto dto) {
+    public ResponseEntity<AmenityResponseDto> create(@RequestBody AmenityRequestDto dto) {
         AmenityResponseDto created = amenityService.create(dto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody AmenityRequestDto dto) {
+    public ResponseEntity<AmenityResponseDto> update(@PathVariable Long id, @RequestBody AmenityRequestDto dto) {
         AmenityResponseDto updated = amenityService.update(id, dto);
-        if (updated == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (updated == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = amenityService.delete(id);
-        if (!deleted) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok("Deleted");
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 }

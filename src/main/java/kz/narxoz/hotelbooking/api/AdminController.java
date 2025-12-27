@@ -4,7 +4,7 @@ import kz.narxoz.hotelbooking.dto.request.AdminCreateUserRequestDto;
 import kz.narxoz.hotelbooking.dto.response.UserResponseDto;
 import kz.narxoz.hotelbooking.service.AdminService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +20,7 @@ public class AdminController {
 
     @PostMapping("/users")
     public ResponseEntity<UserResponseDto> createUser(@RequestBody AdminCreateUserRequestDto dto) {
-        return ResponseEntity.ok(adminService.createUser(dto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(adminService.createUser(dto));
     }
 
     @GetMapping("/users")
@@ -34,8 +34,10 @@ public class AdminController {
     }
 
     @DeleteMapping("/users/{id}")
-    public ResponseEntity<Boolean> deleteUser(@PathVariable Long id) {
-        return ResponseEntity.ok(adminService.deleteUser(id));
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        Boolean deleted = adminService.deleteUser(id);
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/users/{id}/role")

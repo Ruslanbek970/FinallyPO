@@ -19,16 +19,14 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody ReviewRequestDto dto) {
+    public ResponseEntity<ReviewResponseDto> create(@RequestBody ReviewRequestDto dto) {
         ReviewResponseDto created = reviewService.create(dto);
-        if (created == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        if (created == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/hotel/{hotelId}")
-    public ResponseEntity<?> getByHotel(@PathVariable Long hotelId) {
-        List<ReviewResponseDto> list = reviewService.getByHotel(hotelId);
-        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<ReviewResponseDto>> getByHotel(@PathVariable Long hotelId) {
+        return ResponseEntity.ok(reviewService.getByHotel(hotelId));
     }
 }

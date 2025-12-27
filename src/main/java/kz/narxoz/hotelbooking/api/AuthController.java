@@ -5,9 +5,11 @@ import jakarta.servlet.http.HttpSession;
 import kz.narxoz.hotelbooking.dto.request.LoginRequestDto;
 import kz.narxoz.hotelbooking.dto.request.RegisterRequestDto;
 import kz.narxoz.hotelbooking.dto.response.LoginResponseDto;
+import kz.narxoz.hotelbooking.dto.response.UserResponseDto;
 import kz.narxoz.hotelbooking.model.User;
 import kz.narxoz.hotelbooking.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,15 +26,11 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@RequestBody RegisterRequestDto dto) {
-        userService.register(dto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserResponseDto> register(@RequestBody RegisterRequestDto dto) {
+        UserResponseDto created = userService.register(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    /**
-     * ✅ JSON login для Postman
-     * После успешного логина создаётся HttpSession и cookie JSESSIONID улетает клиенту
-     */
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto, HttpServletRequest request) {
 
@@ -42,7 +40,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        // создаём сессию
+        // создаём сессию, чтобы Postman получил JSESSIONID cookie
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
@@ -56,10 +54,6 @@ public class AuthController {
                 .build());
     }
 
-    /**
-     * logout уже есть в SecurityConfig:
-     * POST /api/auth/logout
-     */
     @PostMapping("/logout")
     public ResponseEntity<Void> logout() {
         return ResponseEntity.ok().build();

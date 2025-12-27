@@ -19,33 +19,45 @@ public class RoomController {
     private final RoomService roomService;
 
     @GetMapping("/hotel/{hotelId}")
-    public ResponseEntity<?> getByHotel(@PathVariable Long hotelId) {
-        List<RoomResponseDto> rooms = roomService.getByHotel(hotelId);
-        if (rooms.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok(rooms);
+    public ResponseEntity<List<RoomResponseDto>> getByHotel(@PathVariable Long hotelId) {
+        return ResponseEntity.ok(roomService.getByHotel(hotelId));
+    }
+
+    @GetMapping("/{id}") // ✅ часто нужен в Postman
+    public ResponseEntity<RoomResponseDto> getById(@PathVariable Long id) {
+        RoomResponseDto room = roomService.getById(id); // ✅ сделай метод в сервисе
+        if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(room);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ResponseEntity<?> create(@RequestBody RoomRequestDto dto) {
+    public ResponseEntity<RoomResponseDto> create(@RequestBody RoomRequestDto dto) {
         RoomResponseDto created = roomService.create(dto);
-        if (created == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody RoomRequestDto dto) {
+    public ResponseEntity<RoomResponseDto> update(@PathVariable Long id, @RequestBody RoomRequestDto dto) {
         RoomResponseDto updated = roomService.update(id, dto);
-        if (updated == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         return ResponseEntity.ok(updated);
     }
 
     @PutMapping("/{id}/availability")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
-    public ResponseEntity<?> availability(@PathVariable Long id, @RequestParam boolean available) {
+    public ResponseEntity<Void> availability(@PathVariable Long id, @RequestParam boolean available) {
         Boolean result = roomService.setAvailability(id, available);
-        if (!result) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok("Updated");
+        if (!result) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok().build();
+    }
+
+    // ✅ добавлено
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean deleted = roomService.delete(id); // ✅ сделай boolean в сервисе
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 }

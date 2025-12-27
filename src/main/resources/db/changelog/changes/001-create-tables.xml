@@ -6,7 +6,7 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!-- roles -->
-    <changeSet id="create-roles" author="team">
+    <changeSet id="001-create-roles" author="team">
         <createTable tableName="roles">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -18,7 +18,7 @@
     </changeSet>
 
     <!-- users -->
-    <changeSet id="create-users" author="team">
+    <changeSet id="002-create-users" author="team">
         <createTable tableName="users">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -43,11 +43,19 @@
     </changeSet>
 
     <!-- users_roles -->
-    <changeSet id="create-users-roles" author="team">
+    <changeSet id="003-create-users-roles" author="team">
         <createTable tableName="users_roles">
-            <column name="user_id" type="bigint"/>
-            <column name="role_id" type="bigint"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addPrimaryKey tableName="users_roles"
+                       columnNames="user_id, role_id"
+                       constraintName="pk_users_roles"/>
 
         <addForeignKeyConstraint baseTableName="users_roles" baseColumnNames="user_id"
                                  referencedTableName="users" referencedColumnNames="id"
@@ -59,7 +67,7 @@
     </changeSet>
 
     <!-- cities -->
-    <changeSet id="create-cities" author="team">
+    <changeSet id="004-create-cities" author="team">
         <createTable tableName="cities">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -74,7 +82,7 @@
     </changeSet>
 
     <!-- hotels -->
-    <changeSet id="create-hotels" author="team">
+    <changeSet id="005-create-hotels" author="team">
         <createTable tableName="hotels">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -110,7 +118,7 @@
     </changeSet>
 
     <!-- amenities -->
-    <changeSet id="create-amenities" author="team">
+    <changeSet id="006-create-amenities" author="team">
         <createTable tableName="amenities">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -122,7 +130,7 @@
     </changeSet>
 
     <!-- rooms -->
-    <changeSet id="create-rooms" author="team">
+    <changeSet id="007-create-rooms" author="team">
         <createTable tableName="rooms">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -153,11 +161,19 @@
     </changeSet>
 
     <!-- rooms_amenities -->
-    <changeSet id="create-rooms-amenities" author="team">
+    <changeSet id="008-create-rooms-amenities" author="team">
         <createTable tableName="rooms_amenities">
-            <column name="room_id" type="bigint"/>
-            <column name="amenity_id" type="bigint"/>
+            <column name="room_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amenity_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
         </createTable>
+
+        <addPrimaryKey tableName="rooms_amenities"
+                       columnNames="room_id, amenity_id"
+                       constraintName="pk_rooms_amenities"/>
 
         <addForeignKeyConstraint baseTableName="rooms_amenities" baseColumnNames="room_id"
                                  referencedTableName="rooms" referencedColumnNames="id"
@@ -169,7 +185,7 @@
     </changeSet>
 
     <!-- bookings -->
-    <changeSet id="create-bookings" author="team">
+    <changeSet id="009-create-bookings" author="team">
         <createTable tableName="bookings">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -204,7 +220,7 @@
     </changeSet>
 
     <!-- guests -->
-    <changeSet id="create-guests" author="team">
+    <changeSet id="010-create-guests" author="team">
         <createTable tableName="guests">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -229,7 +245,7 @@
     </changeSet>
 
     <!-- payments -->
-    <changeSet id="create-payments" author="team">
+    <changeSet id="011-create-payments" author="team">
         <createTable tableName="payments">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>
@@ -255,7 +271,7 @@
     </changeSet>
 
     <!-- reviews -->
-    <changeSet id="create-reviews" author="team">
+    <changeSet id="012-create-reviews" author="team">
         <createTable tableName="reviews">
             <column name="id" type="bigserial">
                 <constraints primaryKey="true" nullable="false"/>

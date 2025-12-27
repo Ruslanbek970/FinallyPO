@@ -6,8 +6,16 @@ import kz.narxoz.hotelbooking.dto.response.RoomResponseDto;
 import java.util.List;
 
 public interface RoomService {
+
     List<RoomResponseDto> getByHotel(Long hotelId);
+
+    RoomResponseDto getById(Long id);
+
     RoomResponseDto create(RoomRequestDto dto);
+
     RoomResponseDto update(Long id, RoomRequestDto dto);
+
     Boolean setAvailability(Long id, boolean available);
+
+    boolean delete(Long id);
 }

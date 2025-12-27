@@ -19,16 +19,14 @@ public class GuestController {
     private final GuestService guestService;
 
     @PostMapping
-    public ResponseEntity<?> create(@RequestBody GuestRequestDto dto) {
+    public ResponseEntity<GuestResponseDto> create(@RequestBody GuestRequestDto dto) {
         GuestResponseDto created = guestService.create(dto);
-        if (created == null) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        if (created == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @GetMapping("/booking/{bookingId}")
-    public ResponseEntity<?> getByBooking(@PathVariable Long bookingId) {
-        List<GuestResponseDto> list = guestService.getByBooking(bookingId);
-        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<GuestResponseDto>> getByBooking(@PathVariable Long bookingId) {
+        return ResponseEntity.ok(guestService.getByBooking(bookingId));
     }
 }
