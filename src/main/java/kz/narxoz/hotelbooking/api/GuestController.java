@@ -18,7 +18,7 @@ public class GuestController {
 
     private final GuestService guestService;
 
-    @PostMapping
+    @PostMapping("/")
     public ResponseEntity<GuestResponseDto> create(@RequestBody GuestRequestDto dto) {
         GuestResponseDto created = guestService.create(dto);
         if (created == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
