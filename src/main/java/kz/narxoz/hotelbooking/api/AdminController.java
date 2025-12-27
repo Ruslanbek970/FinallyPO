@@ -38,8 +38,8 @@ public class AdminController {
         return ResponseEntity.ok(adminService.deleteUser(id));
     }
 
-    @PutMapping("/users/{id}/role")
-    public ResponseEntity<Boolean> setRole(@PathVariable Long id, @RequestParam String roleName) {
+    @PutMapping("/users/{id}/role/{roleName}")
+    public ResponseEntity<Boolean> setRole(@PathVariable Long id, @PathVariable String roleName) {
         return ResponseEntity.ok(adminService.setRole(id, roleName));
     }
 }

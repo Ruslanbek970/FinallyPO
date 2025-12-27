@@ -32,7 +32,7 @@
 
         <insert tableName="users">
             <column name="email" value="user@booking.kz"/>
-            <column name="password_hash" value="$$2b$10$7n/bdnxkbaDvVWnty5P9nOitM.00MIxWUK5w0LDG78ganKMA/aZWS"/>
+            <column name="password_hash" value="$2b$10$7n/bdnxkbaDvVWnty5P9nOitM.00MIxWUK5w0LDG78ganKMA/aZWS"/>
             <column name="full_name" value="Regular User"/>
             <column name="phone" value="+7 777 333 33 33"/>
             <column name="active" valueBoolean="true"/>
