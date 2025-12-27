@@ -6,17 +6,17 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
 
     <!-- ROLES -->
-    <changeSet id="seed-roles" author="team">
+    <changeSet id="013-seed-roles" author="team">
         <insert tableName="roles"><column name="name" value="ROLE_ADMIN"/></insert>
         <insert tableName="roles"><column name="name" value="ROLE_MANAGER"/></insert>
         <insert tableName="roles"><column name="name" value="ROLE_USER"/></insert>
     </changeSet>
 
-    <!-- USERS (passwords: Admin123!, Manager123!, User123!) -->
-    <changeSet id="seed-users" author="team">
+    <!-- USERS -->
+    <changeSet id="014-seed-users" author="team">
         <insert tableName="users">
             <column name="email" value="admin@booking.kz"/>
-            <column name="password_hash" value="$2a$10$yXn3c2j0Nq8hJd1.2sOqCevxL0a7jv1Z8wH0oCqZ8d8yShg4kT3d6"/>
+            <column name="password_hash" value="$2a$10$IJw.31OK/94KlMKQgQnZ2OcnpoxcnWqRf/DwRppDRJRfVDlYWAnr2"/>
             <column name="full_name" value="System Admin"/>
             <column name="phone" value="+7 777 111 11 11"/>
             <column name="active" valueBoolean="true"/>
@@ -24,7 +24,7 @@
 
         <insert tableName="users">
             <column name="email" value="manager@booking.kz"/>
-            <column name="password_hash" value="$2a$10$A5jU5wq8VnCwqk1Xq8iR1e0JcJ7eZ8E6bU1cD7X7ZlGv0v3QbJ0b2"/>
+            <column name="password_hash" value="$2a$10$G1CJ/UYk5a.orpgS5KWwieEmzvlFeh.vzt1abZEHH9cT.7p.MqLk2"/>
             <column name="full_name" value="Hotel Manager"/>
             <column name="phone" value="+7 777 222 22 22"/>
             <column name="active" valueBoolean="true"/>
@@ -39,8 +39,8 @@
         </insert>
     </changeSet>
 
-    <!-- USERS_ROLES (без жестких id) -->
-    <changeSet id="seed-users-roles" author="team">
+    <!-- USERS_ROLES -->
+    <changeSet id="015-seed-users-roles" author="team">
         <insert tableName="users_roles">
             <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='admin@booking.kz')"/>
             <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_ADMIN')"/>
@@ -58,14 +58,14 @@
     </changeSet>
 
     <!-- cities -->
-    <changeSet id="seed-cities" author="team">
+    <changeSet id="016-seed-cities" author="team">
         <insert tableName="cities"><column name="name" value="Almaty"/><column name="country" value="Kazakhstan"/></insert>
         <insert tableName="cities"><column name="name" value="Astana"/><column name="country" value="Kazakhstan"/></insert>
         <insert tableName="cities"><column name="name" value="Shymkent"/><column name="country" value="Kazakhstan"/></insert>
     </changeSet>
 
     <!-- amenities -->
-    <changeSet id="seed-amenities" author="team">
+    <changeSet id="017-seed-amenities" author="team">
         <insert tableName="amenities"><column name="name" value="Wi-Fi"/></insert>
         <insert tableName="amenities"><column name="name" value="Breakfast"/></insert>
         <insert tableName="amenities"><column name="name" value="Pool"/></insert>
@@ -73,7 +73,7 @@
     </changeSet>
 
     <!-- hotel + rooms -->
-    <changeSet id="seed-hotels-rooms" author="team">
+    <changeSet id="018-seed-hotels-rooms" author="team">
         <insert tableName="hotels">
             <column name="name" value="Rixos Almaty"/>
             <column name="address" value="Seifullin Ave 506, Almaty"/>
