@@ -86,12 +86,19 @@ public class HotelServiceImpl implements HotelService {
         Hotel saved = hotelRepository.save(h);
         return hotelMapper.toDto(saved);
     }
-        @Override
+
+    @Override
     public List<HotelResponseDto> getMyHotels() {
         User manager = userService.getCurrentUserEntity();
         if (manager == null) return List.of();
-
         return hotelMapper.toDtoList(hotelRepository.findAllByManager(manager));
     }
 
+    @Override
+    public boolean delete(Long id) {
+        Hotel h = hotelRepository.findById(id).orElse(null);
+        if (Objects.isNull(h)) return false;
+        hotelRepository.deleteById(id);
+        return true;
+    }
 }

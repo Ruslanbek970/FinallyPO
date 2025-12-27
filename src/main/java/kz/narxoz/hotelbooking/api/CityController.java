@@ -19,32 +19,37 @@ public class CityController {
     private final CityService cityService;
 
     @GetMapping
-    public ResponseEntity<?> getAll() {
-        List<CityResponseDto> list = cityService.getAll();
-        if (list.isEmpty()) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        return ResponseEntity.ok(list);
+    public ResponseEntity<List<CityResponseDto>> getAll() {
+        return ResponseEntity.ok(cityService.getAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CityResponseDto> getById(@PathVariable Long id) {
+        CityResponseDto city = cityService.getById(id);
+        if (city == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(city);
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> create(@RequestBody CityRequestDto dto) {
+    public ResponseEntity<CityResponseDto> create(@RequestBody CityRequestDto dto) {
         CityResponseDto created = cityService.create(dto);
-        return new ResponseEntity<>(created, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody CityRequestDto dto) {
+    public ResponseEntity<CityResponseDto> update(@PathVariable Long id, @RequestBody CityRequestDto dto) {
         CityResponseDto updated = cityService.update(id, dto);
-        if (updated == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (updated == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = cityService.delete(id);
-        if (!deleted) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        return ResponseEntity.ok("Deleted");
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 }

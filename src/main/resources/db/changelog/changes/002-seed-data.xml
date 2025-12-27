@@ -16,7 +16,7 @@
     <changeSet id="seed-users" author="team">
         <insert tableName="users">
             <column name="email" value="admin@booking.kz"/>
-            <column name="password_hash" value="$2b$10$AASUIydC35.HCuNsbupr7u1u0lsV5hYQgFj9ziyBb.47Es13Y2JZq"/>
+            <column name="password_hash" value="$2a$10$yXn3c2j0Nq8hJd1.2sOqCevxL0a7jv1Z8wH0oCqZ8d8yShg4kT3d6"/>
             <column name="full_name" value="System Admin"/>
             <column name="phone" value="+7 777 111 11 11"/>
             <column name="active" valueBoolean="true"/>
@@ -24,7 +24,7 @@
 
         <insert tableName="users">
             <column name="email" value="manager@booking.kz"/>
-            <column name="password_hash" value="$2b$10$SA63Y6bXpjQ2SVRcNhjfse6PNfiDnB0vkIg/yKzqBPbIrbiCpq9oS"/>
+            <column name="password_hash" value="$2a$10$A5jU5wq8VnCwqk1Xq8iR1e0JcJ7eZ8E6bU1cD7X7ZlGv0v3QbJ0b2"/>
             <column name="full_name" value="Hotel Manager"/>
             <column name="phone" value="+7 777 222 22 22"/>
             <column name="active" valueBoolean="true"/>
@@ -32,7 +32,7 @@
 
         <insert tableName="users">
             <column name="email" value="user@booking.kz"/>
-            <column name="password_hash" value="$2b$10$7n/bdnxkbaDvVWnty5P9nOitM.00MIxWUK5w0LDG78ganKMA/aZWS"/>
+            <column name="password_hash" value="$2a$10$4kqkW2p3xT6D3J3x5SxZbO5zUO1C8cZ1jHqZlqXwP5e5l7m9e7T5G"/>
             <column name="full_name" value="Regular User"/>
             <column name="phone" value="+7 777 333 33 33"/>
             <column name="active" valueBoolean="true"/>

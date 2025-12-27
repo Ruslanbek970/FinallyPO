@@ -20,25 +20,21 @@ public class ManagerController {
     private final BookingService bookingService;
     private final HotelService hotelService;
 
-    // менеджер видит только свои отели (реализуем в сервисе)
     @GetMapping("/hotels")
     public ResponseEntity<List<HotelResponseDto>> myHotels() {
         return ResponseEntity.ok(hotelService.getMyHotels());
     }
 
-    // менеджер видит брони по своим отелям
     @GetMapping("/bookings")
     public ResponseEntity<List<BookingResponseDto>> myHotelsBookings() {
         return ResponseEntity.ok(bookingService.getManagerBookings());
     }
 
-    // подтверждение брони
     @PutMapping("/bookings/{id}/confirm")
     public ResponseEntity<Boolean> confirm(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.confirmByManager(id));
     }
 
-    // отмена брони менеджером
     @PutMapping("/bookings/{id}/cancel")
     public ResponseEntity<Boolean> cancel(@PathVariable Long id) {
         return ResponseEntity.ok(bookingService.cancelByManager(id));

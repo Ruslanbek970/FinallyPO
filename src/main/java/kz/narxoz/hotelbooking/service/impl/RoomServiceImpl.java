@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -26,23 +27,28 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomResponseDto> getByHotel(Long hotelId) {
-        Hotel hotel = hotelRepository.findById(hotelId)
-                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+        Hotel hotel = hotelRepository.findById(hotelId).orElse(null);
+        if (hotel == null) return List.of();
 
         return roomMapper.toDtoList(roomRepository.findAllByHotel(hotel));
     }
 
     @Override
+    public RoomResponseDto getById(Long id) {
+        Room room = roomRepository.findById(id).orElse(null);
+        if (room == null) return null;
+        return roomMapper.toDto(room);
+    }
+
+    @Override
     public RoomResponseDto create(RoomRequestDto dto) {
-        Hotel hotel = hotelRepository.findById(dto.getHotelId())
-                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+        Hotel hotel = hotelRepository.findById(dto.getHotelId()).orElse(null);
+        if (hotel == null) return null;
 
         List<Amenity> amenities = List.of();
         if (dto.getAmenityIds() != null && !dto.getAmenityIds().isEmpty()) {
             amenities = amenityRepository.findAllById(dto.getAmenityIds());
-            if (amenities.size() != dto.getAmenityIds().size()) {
-                throw new RuntimeException("Some amenities not found");
-            }
+            if (amenities.size() != dto.getAmenityIds().size()) return null;
         }
 
         Room r = new Room();
@@ -60,18 +66,16 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomResponseDto update(Long id, RoomRequestDto dto) {
-        Room r = roomRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room r = roomRepository.findById(id).orElse(null);
+        if (r == null) return null;
 
-        Hotel hotel = hotelRepository.findById(dto.getHotelId())
-                .orElseThrow(() -> new RuntimeException("Hotel not found"));
+        Hotel hotel = hotelRepository.findById(dto.getHotelId()).orElse(null);
+        if (hotel == null) return null;
 
         List<Amenity> amenities = List.of();
         if (dto.getAmenityIds() != null && !dto.getAmenityIds().isEmpty()) {
             amenities = amenityRepository.findAllById(dto.getAmenityIds());
-            if (amenities.size() != dto.getAmenityIds().size()) {
-                throw new RuntimeException("Some amenities not found");
-            }
+            if (amenities.size() != dto.getAmenityIds().size()) return null;
         }
 
         r.setRoomNumber(dto.getRoomNumber());
@@ -88,11 +92,19 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public Boolean setAvailability(Long id, boolean available) {
-        Room r = roomRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room r = roomRepository.findById(id).orElse(null);
+        if (r == null) return false;
 
         r.setAvailable(available);
         roomRepository.save(r);
+        return true;
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        Room r = roomRepository.findById(id).orElse(null);
+        if (Objects.isNull(r)) return false;
+        roomRepository.deleteById(id);
         return true;
     }
 }

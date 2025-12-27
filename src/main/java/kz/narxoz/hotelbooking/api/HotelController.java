@@ -4,7 +4,7 @@ import kz.narxoz.hotelbooking.dto.request.HotelRequestDto;
 import kz.narxoz.hotelbooking.dto.response.HotelResponseDto;
 import kz.narxoz.hotelbooking.service.HotelService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,18 +25,33 @@ public class HotelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<HotelResponseDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(hotelService.getById(id));
+        HotelResponseDto hotel = hotelService.getById(id);
+        if (hotel == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(hotel);
     }
 
     @PostMapping
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<HotelResponseDto> create(@RequestBody HotelRequestDto dto) {
-        return ResponseEntity.ok(hotelService.create(dto));
+        HotelResponseDto created = hotelService.create(dto);
+        if (created == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<HotelResponseDto> update(@PathVariable Long id, @RequestBody HotelRequestDto dto) {
-        return ResponseEntity.ok(hotelService.update(id, dto));
+        HotelResponseDto updated = hotelService.update(id, dto);
+        if (updated == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.ok(updated);
+    }
+
+    // ✅ добавлено
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        boolean deleted = hotelService.delete(id); // ✅ сделай boolean в сервисе
+        if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        return ResponseEntity.noContent().build();
     }
 }

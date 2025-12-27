@@ -31,15 +31,15 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public BookingResponseDto create(BookingRequestDto dto) {
         User user = userService.getCurrentUserEntity();
-        if (user == null) throw new RuntimeException("Unauthorized");
+        if (user == null) return null;
 
-        Room room = roomRepository.findById(dto.getRoomId())
-                .orElseThrow(() -> new RuntimeException("Room not found"));
+        Room room = roomRepository.findById(dto.getRoomId()).orElse(null);
+        if (room == null) return null;
 
-        if (!room.isAvailable()) throw new RuntimeException("Room is not available");
+        if (!room.isAvailable()) return null;
 
         long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
-        if (days <= 0) throw new RuntimeException("Invalid dates");
+        if (days <= 0) return null;
 
         int totalPrice = (int) days * room.getPricePerNight();
 
@@ -53,7 +53,6 @@ public class BookingServiceImpl implements BookingService {
 
         Booking saved = bookingRepository.save(b);
 
-        // можно сразу занять комнату
         room.setAvailable(false);
         roomRepository.save(room);
 
@@ -63,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingResponseDto> getMyBookings() {
         User user = userService.getCurrentUserEntity();
-        if (user == null) throw new RuntimeException("Unauthorized");
+        if (user == null) return List.of();
 
         return bookingMapper.toDtoList(bookingRepository.findAllByUser(user));
     }
@@ -71,14 +70,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Boolean cancel(Long bookingId) {
         User user = userService.getCurrentUserEntity();
-        if (user == null) throw new RuntimeException("Unauthorized");
+        if (user == null) return false;
 
-        Booking b = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking b = bookingRepository.findById(bookingId).orElse(null);
+        if (b == null) return false;
 
-        if (!b.getUser().getId().equals(user.getId())) {
-            throw new RuntimeException("Access denied");
-        }
+        if (!b.getUser().getId().equals(user.getId())) return false;
 
         b.setStatus("CANCELLED");
         bookingRepository.save(b);
@@ -93,7 +90,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<BookingResponseDto> getManagerBookings() {
         User manager = userService.getCurrentUserEntity();
-        if (manager == null) throw new RuntimeException("Unauthorized");
+        if (manager == null) return List.of();
 
         List<Hotel> hotels = hotelRepository.findAllByManager(manager);
         if (hotels.isEmpty()) return List.of();
@@ -108,14 +105,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Boolean confirmByManager(Long bookingId) {
         User manager = userService.getCurrentUserEntity();
-        if (manager == null) throw new RuntimeException("Unauthorized");
+        if (manager == null) return false;
 
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) return false;
 
-        if (!booking.getRoom().getHotel().getManager().getId().equals(manager.getId())) {
-            throw new RuntimeException("Access denied");
-        }
+        if (!booking.getRoom().getHotel().getManager().getId().equals(manager.getId())) return false;
 
         booking.setStatus("CONFIRMED");
         bookingRepository.save(booking);
@@ -125,14 +120,12 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Boolean cancelByManager(Long bookingId) {
         User manager = userService.getCurrentUserEntity();
-        if (manager == null) throw new RuntimeException("Unauthorized");
+        if (manager == null) return false;
 
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) return false;
 
-        if (!booking.getRoom().getHotel().getManager().getId().equals(manager.getId())) {
-            throw new RuntimeException("Access denied");
-        }
+        if (!booking.getRoom().getHotel().getManager().getId().equals(manager.getId())) return false;
 
         booking.setStatus("CANCELLED");
         bookingRepository.save(booking);
@@ -141,6 +134,29 @@ public class BookingServiceImpl implements BookingService {
         room.setAvailable(true);
         roomRepository.save(room);
 
+        return true;
+    }
+
+    @Override
+    public BookingResponseDto getById(Long bookingId) {
+        Booking b = bookingRepository.findById(bookingId).orElse(null);
+        if (b == null) return null;
+        return bookingMapper.toDto(b);
+    }
+
+    @Override
+    public boolean delete(Long bookingId) {
+        Booking b = bookingRepository.findById(bookingId).orElse(null);
+        if (b == null) return false;
+
+        // освобождаем комнату
+        Room room = b.getRoom();
+        if (room != null) {
+            room.setAvailable(true);
+            roomRepository.save(room);
+        }
+
+        bookingRepository.deleteById(bookingId);
         return true;
     }
 }
