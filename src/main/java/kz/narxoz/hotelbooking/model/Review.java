@@ -10,10 +10,14 @@ import java.time.LocalDateTime;
 @Table(name = "reviews")
 @Getter
 @Setter
-public class Review extends BaseEntity {
+public class Review {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "rating", nullable = false)
-    private int rating; // 1..5
+    private int rating;
 
     @Column(name = "comment")
     private String comment;

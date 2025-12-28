@@ -10,7 +10,11 @@ import java.time.LocalDateTime;
 @Table(name = "payments")
 @Getter
 @Setter
-public class Payment extends BaseEntity {
+public class Payment{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @OneToOne
     @JoinColumn(name = "booking_id", unique = true, nullable = false)

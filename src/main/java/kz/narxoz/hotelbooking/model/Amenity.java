@@ -1,8 +1,6 @@
 package kz.narxoz.hotelbooking.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +8,11 @@ import lombok.Setter;
 @Table(name = "amenities")
 @Getter
 @Setter
-public class Amenity extends BaseEntity {
+public class Amenity{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;

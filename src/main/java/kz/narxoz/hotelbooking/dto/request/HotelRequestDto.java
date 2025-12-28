@@ -9,5 +9,5 @@ public class HotelRequestDto {
     private String description;
     private boolean active = true;
     private Long cityId;
-    private Long managerId; // optional
+    private Long managerId;
 }

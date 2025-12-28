@@ -16,5 +16,5 @@ public class RoomResponseDto {
     private Long hotelId;
     private String hotelName;
 
-    private List<String> amenities; // names
+    private List<String> amenities;
 }

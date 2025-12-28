@@ -10,7 +10,11 @@ import java.time.LocalDate;
 @Table(name = "bookings")
 @Getter
 @Setter
-public class Booking extends BaseEntity {
+public class Booking{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "check_in", nullable = false)
     private LocalDate checkInDate;

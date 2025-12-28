@@ -14,7 +14,11 @@ import java.util.List;
 @Table(name = "users")
 @Getter
 @Setter
-public class User extends BaseEntity implements UserDetails {
+public class User implements UserDetails {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;

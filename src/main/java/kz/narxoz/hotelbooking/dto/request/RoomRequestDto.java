@@ -14,6 +14,6 @@ public class RoomRequestDto {
 
     private Long hotelId;
 
-    // ids amenities
+
     private List<Long> amenityIds;
 }

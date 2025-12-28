@@ -8,7 +8,11 @@ import lombok.Setter;
 @Table(name = "hotels")
 @Getter
 @Setter
-public class Hotel extends BaseEntity {
+public class Hotel{
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "name", nullable = false)
     private String name;

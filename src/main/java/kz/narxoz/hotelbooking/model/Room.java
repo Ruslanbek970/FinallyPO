@@ -10,7 +10,11 @@ import java.util.List;
 @Table(name = "rooms")
 @Getter
 @Setter
-public class Room extends BaseEntity {
+public class Room {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @Column(name = "room_number", nullable = false)
     private String roomNumber;
