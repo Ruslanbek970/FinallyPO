@@ -133,9 +133,9 @@ spring.liquibase.enabled=true
 - `ROLE_MANAGER`
 - `ROLE_USER`
 и пользователей:
-- `admin@booking.kz` (`full_name`: `System Admin`)
-- `manager@booking.kz` (`full_name`: `Hotel Manager`)
-- `user@booking.kz` (`full_name`: `Regular User`)
+- `ruslanbek@booking.kz` (`full_name`: `System Admin`)
+- `kasym@booking.kz` (`full_name`: `Hotel Manager`)
+- `maksat@booking.kz` (`full_name`: `Regular User`)
 
 > В seed-данных хранятся **bcrypt-хэши** (`password_hash`). Исходные пароли в проекте не найдены.
 
@@ -146,8 +146,8 @@ Endpoint: **POST** `/api/auth/login`
 Request (`LoginRequestDto`):
 ```json
 {
-  "email": "user@test.com",
-  "password": "Password123!"
+  "email": "nouneym@test.com",
+  "password": "nouneympassword05!"
 }
 ```
 
@@ -155,7 +155,7 @@ Response (`LoginResponseDto`):
 ```json
 {
   "id": 1,
-  "email": "user@test.com",
+  "email": "nouneym@test.com",
   "fullName": "Example User",
   "roles": [
     "string"

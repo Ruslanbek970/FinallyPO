@@ -15,7 +15,7 @@
     <!-- USERS  AdminRus55, ManagerKas55, User123!  -->
     <changeSet id="014-seed-users" author="team">
         <insert tableName="users">
-            <column name="email" value="admin@booking.kz"/>
+            <column name="email" value="ruslanbek@booking.kz"/>
             <column name="password_hash" value="$2a$10$IJw.31OK/94KlMKQgQnZ2OcnpoxcnWqRf/DwRppDRJRfVDlYWAnr2"/>
             <column name="full_name" value="System Admin"/>
             <column name="phone" value="+7 777 111 11 11"/>
@@ -23,7 +23,7 @@
         </insert>
 
         <insert tableName="users">
-            <column name="email" value="manager@booking.kz"/>
+            <column name="email" value="kasym@booking.kz"/>
             <column name="password_hash" value="$2a$10$G1CJ/UYk5a.orpgS5KWwieEmzvlFeh.vzt1abZEHH9cT.7p.MqLk2"/>
             <column name="full_name" value="Hotel Manager"/>
             <column name="phone" value="+7 777 222 22 22"/>
@@ -31,7 +31,7 @@
         </insert>
 
         <insert tableName="users">
-            <column name="email" value="user@booking.kz"/>
+            <column name="email" value="maksat@booking.kz"/>
             <column name="password_hash" value="$2a$10$fHtM0AH98QM7tJt.QSnXQefrV1/krMALGghr4xKCS9cpHI54y3pt2"/>
             <column name="full_name" value="Regular User"/>
             <column name="phone" value="+7 777 333 33 33"/>
@@ -42,17 +42,17 @@
     <!-- USERS_ROLES -->
     <changeSet id="015-seed-users-roles" author="team">
         <insert tableName="users_roles">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='admin@booking.kz')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='ruslanbek@booking.kz')"/>
             <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_ADMIN')"/>
         </insert>
 
         <insert tableName="users_roles">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='manager@booking.kz')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='kasym@booking.kz')"/>
             <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_MANAGER')"/>
         </insert>
 
         <insert tableName="users_roles">
-            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='user@booking.kz')"/>
+            <column name="user_id" valueComputed="(SELECT id FROM users WHERE email='maksat@booking.kz')"/>
             <column name="role_id" valueComputed="(SELECT id FROM roles WHERE name='ROLE_USER')"/>
         </insert>
     </changeSet>
@@ -81,7 +81,8 @@
             <column name="rating" valueNumeric="4.7"/>
             <column name="active" valueBoolean="true"/>
             <column name="city_id" valueComputed="(SELECT id FROM cities WHERE name='Almaty')"/>
-            <column name="manager_id" valueComputed="(SELECT id FROM users WHERE email='manager@booking.kz')"/>
+            <!-- FIXED: manager should exist in users table -->
+            <column name="manager_id" valueComputed="(SELECT id FROM users WHERE email='kasym@booking.kz')"/>
         </insert>
 
         <insert tableName="rooms">
@@ -101,6 +102,55 @@
             <column name="available" valueBoolean="true"/>
             <column name="hotel_id" valueComputed="(SELECT id FROM hotels WHERE name='Rixos Almaty')"/>
         </insert>
+    </changeSet>
+
+    <!-- rooms_amenities -->
+    <changeSet id="019-seed-rooms-amenities" author="team">
+
+        <!-- Room 101: Wi-Fi, Breakfast, Parking -->
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='101' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Wi-Fi')"/>
+        </insert>
+
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='101' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Breakfast')"/>
+        </insert>
+
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='101' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Parking')"/>
+        </insert>
+
+        <!-- Room 202: Wi-Fi, Pool, Parking -->
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='202' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Wi-Fi')"/>
+        </insert>
+
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='202' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Pool')"/>
+        </insert>
+
+        <insert tableName="rooms_amenities">
+            <column name="room_id"
+                    valueComputed="(SELECT id FROM rooms WHERE room_number='202' AND hotel_id=(SELECT id FROM hotels WHERE name='Rixos Almaty'))"/>
+            <column name="amenity_id"
+                    valueComputed="(SELECT id FROM amenities WHERE name='Parking')"/>
+        </insert>
+
     </changeSet>
 
 </databaseChangeLog>
