@@ -40,7 +40,7 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        // создаём сессию, чтобы Postman получил JSESSIONID cookie
+
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 

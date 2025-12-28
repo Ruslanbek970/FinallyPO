@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class PaymentRequestDto {
     private Long bookingId;
-    private String method; // CARD, CASH
+    private String method;
 }

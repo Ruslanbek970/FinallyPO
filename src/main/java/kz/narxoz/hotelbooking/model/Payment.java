@@ -17,10 +17,10 @@ public class Payment extends BaseEntity {
     private Booking booking;
 
     @Column(name = "method", nullable = false)
-    private String method; // CARD, CASH
+    private String method;
 
     @Column(name = "status", nullable = false)
-    private String status; // PAID, FAILED, PENDING
+    private String status;
 
     @Column(name = "amount", nullable = false)
     private int amount;
