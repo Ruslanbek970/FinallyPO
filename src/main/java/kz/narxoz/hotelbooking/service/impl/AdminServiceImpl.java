@@ -2,6 +2,7 @@ package kz.narxoz.hotelbooking.service.impl;
 
 import kz.narxoz.hotelbooking.dto.request.AdminCreateUserRequestDto;
 import kz.narxoz.hotelbooking.dto.response.UserResponseDto;
+import kz.narxoz.hotelbooking.mapper.UserMapper;
 import kz.narxoz.hotelbooking.model.Role;
 import kz.narxoz.hotelbooking.model.User;
 import kz.narxoz.hotelbooking.repository.RoleRepository;
@@ -21,6 +22,7 @@ public class AdminServiceImpl implements AdminService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
 
     @Override
     public UserResponseDto createUser(AdminCreateUserRequestDto dto) {
@@ -45,15 +47,7 @@ public class AdminServiceImpl implements AdminService {
 
         User saved = userRepository.save(u);
 
-        return UserResponseDto.builder()
-                .id(saved.getId())
-                .email(saved.getEmail())
-                .fullName(saved.getFullName())
-                .phone(saved.getPhone())
-                .active(saved.isActive())
-                .createdAt(saved.getCreatedAt())
-                .roles(saved.getRoles().stream().map(Role::getName).toList())
-                .build();
+        return userMapper.toDto(saved);
     }
 
     @Override
