@@ -24,7 +24,6 @@ public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
     private final RoomRepository roomRepository;
-    private final HotelRepository hotelRepository;
     private final UserService userService;
     private final BookingMapper bookingMapper;
 
@@ -34,24 +33,22 @@ public class BookingServiceImpl implements BookingService {
         if (user == null) return null;
 
         Room room = roomRepository.findById(dto.getRoomId()).orElse(null);
-        if (room == null) return null;
-
-        if (!room.isAvailable()) return null;
+        if (room == null || !room.isAvailable()) return null;
 
         long days = ChronoUnit.DAYS.between(dto.getCheckInDate(), dto.getCheckOutDate());
         if (days <= 0) return null;
 
         int totalPrice = (int) days * room.getPricePerNight();
 
-        Booking b = new Booking();
-        b.setUser(user);
-        b.setRoom(room);
-        b.setCheckInDate(dto.getCheckInDate());
-        b.setCheckOutDate(dto.getCheckOutDate());
-        b.setStatus("PENDING");
-        b.setTotalPrice(totalPrice);
+        Booking booking = new Booking();
+        booking.setUser(user);
+        booking.setRoom(room);
+        booking.setCheckInDate(dto.getCheckInDate());
+        booking.setCheckOutDate(dto.getCheckOutDate());
+        booking.setStatus("PENDING");
+        booking.setTotalPrice(totalPrice);
 
-        Booking saved = bookingRepository.save(b);
+        Booking saved = bookingRepository.save(booking);
 
         room.setAvailable(false);
         roomRepository.save(room);
@@ -72,15 +69,15 @@ public class BookingServiceImpl implements BookingService {
         User user = userService.getCurrentUserEntity();
         if (user == null) return false;
 
-        Booking b = bookingRepository.findById(bookingId).orElse(null);
-        if (b == null) return false;
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) return false;
 
-        if (!b.getUser().getId().equals(user.getId())) return false;
+        if (!booking.getUser().getId().equals(user.getId())) return false;
 
-        b.setStatus("CANCELLED");
-        bookingRepository.save(b);
+        booking.setStatus("CANCELLED");
+        bookingRepository.save(booking);
 
-        Room room = b.getRoom();
+        Room room = booking.getRoom();
         room.setAvailable(true);
         roomRepository.save(room);
 
@@ -92,14 +89,9 @@ public class BookingServiceImpl implements BookingService {
         User manager = userService.getCurrentUserEntity();
         if (manager == null) return List.of();
 
-        List<Hotel> hotels = hotelRepository.findAllByManager(manager);
-        if (hotels.isEmpty()) return List.of();
-
-        List<Booking> filtered = bookingRepository.findAll().stream()
-                .filter(b -> hotels.stream().anyMatch(h -> h.getId().equals(b.getRoom().getHotel().getId())))
-                .toList();
-
-        return bookingMapper.toDtoList(filtered);
+        return bookingMapper.toDtoList(
+                bookingRepository.findAllByRoom_Hotel_Manager(manager)
+        );
     }
 
     @Override
@@ -139,18 +131,18 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public BookingResponseDto getById(Long bookingId) {
-        Booking b = bookingRepository.findById(bookingId).orElse(null);
-        if (b == null) return null;
-        return bookingMapper.toDto(b);
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) return null;
+
+        return bookingMapper.toDto(booking);
     }
 
     @Override
     public boolean delete(Long bookingId) {
-        Booking b = bookingRepository.findById(bookingId).orElse(null);
-        if (b == null) return false;
+        Booking booking = bookingRepository.findById(bookingId).orElse(null);
+        if (booking == null) return false;
 
-        // освобождаем комнату
-        Room room = b.getRoom();
+        Room room = booking.getRoom();
         if (room != null) {
             room.setAvailable(true);
             roomRepository.save(room);

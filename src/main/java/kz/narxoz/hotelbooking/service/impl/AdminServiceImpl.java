@@ -82,17 +82,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<UserResponseDto> getAllUsers() {
-        return userRepository.findAll()
-                .stream()
-                .map(u -> UserResponseDto.builder()
-                        .id(u.getId())
-                        .email(u.getEmail())
-                        .fullName(u.getFullName())
-                        .phone(u.getPhone())
-                        .active(u.isActive())
-                        .createdAt(u.getCreatedAt())
-                        .roles(u.getRoles().stream().map(Role::getName).toList())
-                        .build())
-                .toList();
+        return userMapper.toDtoList(userRepository.findAll());
     }
 }

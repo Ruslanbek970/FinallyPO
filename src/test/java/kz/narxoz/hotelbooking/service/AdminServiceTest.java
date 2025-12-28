@@ -2,6 +2,7 @@ package kz.narxoz.hotelbooking.service;
 
 import kz.narxoz.hotelbooking.dto.request.AdminCreateUserRequestDto;
 import kz.narxoz.hotelbooking.dto.response.UserResponseDto;
+import kz.narxoz.hotelbooking.mapper.UserMapper;
 import kz.narxoz.hotelbooking.model.Role;
 import kz.narxoz.hotelbooking.model.User;
 import kz.narxoz.hotelbooking.repository.RoleRepository;
@@ -23,8 +24,9 @@ public class AdminServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserMapper userMapper = mock(UserMapper.class);
 
-        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder);
+        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
 
         AdminCreateUserRequestDto dto = new AdminCreateUserRequestDto();
         dto.setEmail("admin@test.com");
@@ -38,6 +40,7 @@ public class AdminServiceTest {
         verify(userRepository, times(1)).findByEmail("admin@test.com");
         verify(roleRepository, never()).findByName(anyString());
         verify(userRepository, never()).save(any());
+        verify(userMapper, never()).toDto(any());
     }
 
     @Test
@@ -45,8 +48,9 @@ public class AdminServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserMapper userMapper = mock(UserMapper.class);
 
-        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder);
+        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
 
         AdminCreateUserRequestDto dto = new AdminCreateUserRequestDto();
         dto.setEmail("admin@test.com");
@@ -61,6 +65,7 @@ public class AdminServiceTest {
         verify(userRepository, times(1)).findByEmail("admin@test.com");
         verify(roleRepository, times(1)).findByName("ROLE_USER");
         verify(userRepository, never()).save(any());
+        verify(userMapper, never()).toDto(any());
     }
 
     @Test
@@ -68,8 +73,9 @@ public class AdminServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserMapper userMapper = mock(UserMapper.class);
 
-        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder);
+        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
 
         AdminCreateUserRequestDto dto = new AdminCreateUserRequestDto();
         dto.setEmail("manager@test.com");
@@ -84,7 +90,7 @@ public class AdminServiceTest {
         role.setName("ROLE_USER");
         when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
 
-        // чтобы не было "might be null"
+        // чтобы не было предупреждения "might be null"
         doReturn("ENC").when(passwordEncoder).encode("123");
 
         User saved = new User();
@@ -96,6 +102,18 @@ public class AdminServiceTest {
         saved.setRoles(List.of(role));
 
         when(userRepository.save(any(User.class))).thenReturn(saved);
+
+        // Важно: теперь сервис возвращает userMapper.toDto(saved)
+        UserResponseDto mapped = UserResponseDto.builder()
+                .id(10L)
+                .email("manager@test.com")
+                .fullName("Manager Name")
+                .phone("+7700")
+                .active(true)
+                .roles(List.of("ROLE_USER"))
+                .build();
+
+        when(userMapper.toDto(saved)).thenReturn(mapped);
 
         UserResponseDto result = adminService.createUser(dto);
 
@@ -110,6 +128,7 @@ public class AdminServiceTest {
         Assertions.assertEquals("ROLE_USER", result.getRoles().get(0));
 
         verify(userRepository, times(1)).save(any(User.class));
+        verify(userMapper, times(1)).toDto(saved);
     }
 
     @Test
@@ -117,8 +136,9 @@ public class AdminServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserMapper userMapper = mock(UserMapper.class);
 
-        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder);
+        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
 
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
@@ -128,6 +148,7 @@ public class AdminServiceTest {
 
         verify(userRepository, times(1)).findById(1L);
         verify(userRepository, never()).save(any());
+        verify(userMapper, never()).toDto(any());
     }
 
     @Test
@@ -135,8 +156,9 @@ public class AdminServiceTest {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         PasswordEncoder passwordEncoder = mock(PasswordEncoder.class);
+        UserMapper userMapper = mock(UserMapper.class);
 
-        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder);
+        AdminService adminService = new AdminServiceImpl(userRepository, roleRepository, passwordEncoder, userMapper);
 
         User user = new User();
         user.setId(1L);
@@ -151,5 +173,6 @@ public class AdminServiceTest {
         Assertions.assertFalse(user.isActive());
 
         verify(userRepository, times(1)).save(user);
+        verify(userMapper, never()).toDto(any());
     }
 }
