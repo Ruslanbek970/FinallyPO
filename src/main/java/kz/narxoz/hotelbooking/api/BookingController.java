@@ -29,9 +29,9 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.getMyBookings());
     }
 
-    @GetMapping("/{id}") // ✅ часто есть в коллекциях
+    @GetMapping("/{id}")
     public ResponseEntity<BookingResponseDto> getById(@PathVariable Long id) {
-        BookingResponseDto booking = bookingService.getById(id); // ✅ добавь в сервис
+        BookingResponseDto booking = bookingService.getById(id);
         if (booking == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(booking);
     }
@@ -41,11 +41,11 @@ public class BookingController {
         return ResponseEntity.ok(bookingService.cancel(id));
     }
 
-    // ✅ иногда требуют админы
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = bookingService.delete(id); // ✅ сделай boolean
+        boolean deleted = bookingService.delete(id);
         if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.noContent().build();
     }

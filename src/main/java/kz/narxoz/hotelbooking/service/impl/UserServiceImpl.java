@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -28,26 +29,28 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserMapper userMapper;
 
-   @Override
-   public UserResponseDto register(RegisterRequestDto dto) {
-    if (userRepository.existsByEmail(dto.getEmail())) {
-        throw new RuntimeException("Email already exists");
+    @Override
+    public UserResponseDto register(RegisterRequestDto dto) {
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+
+        Role roleUser = roleRepository.findByName("ROLE_USER").orElse(null);
+        if (Objects.isNull(roleUser)) {
+            throw new RuntimeException("ROLE_USER not found");
+        }
+
+        User u = new User();
+        u.setEmail(dto.getEmail());
+        u.setPassword(passwordEncoder.encode(dto.getPassword()));
+        u.setFullName(dto.getFullName());
+        u.setPhone(dto.getPhone());
+        u.setActive(true);
+        u.setRoles(List.of(roleUser));
+
+        User saved = userRepository.save(u);
+        return userMapper.toDto(saved);
     }
-
-    Role roleUser = roleRepository.findByName("ROLE_USER")
-            .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
-
-    User u = new User();
-    u.setEmail(dto.getEmail());
-    u.setPassword(passwordEncoder.encode(dto.getPassword()));
-    u.setFullName(dto.getFullName());
-    u.setPhone(dto.getPhone());
-    u.setActive(true);
-    u.setRoles(List.of(roleUser));
-
-    User saved = userRepository.save(u);
-    return userMapper.toDto(saved);
-}
 
     @Override
     public UserResponseDto me() {

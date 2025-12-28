@@ -6,9 +6,20 @@ import kz.narxoz.hotelbooking.model.User;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
-@Mapper(componentModel = "spring", imports = Role.class)
+import java.util.List;
+
+@Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "roles", expression = "java(user.getRoles().stream().map(Role::getName).toList())")
+    @Mapping(source = "roles", target = "roles")
     UserResponseDto toDto(User user);
+
+    default List<String> mapRoles(List<Role> roles) {
+        if (roles == null) {
+            return List.of();
+        }
+        return roles.stream()
+                .map(r -> r == null ? null : r.getName())
+                .toList();
+    }
 }

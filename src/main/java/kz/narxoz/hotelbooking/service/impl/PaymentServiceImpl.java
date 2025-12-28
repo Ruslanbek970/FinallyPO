@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,22 +31,24 @@ public class PaymentServiceImpl implements PaymentService {
         User user = userService.getCurrentUserEntity();
         if (user == null) throw new RuntimeException("Unauthorized");
 
-        Booking booking = bookingRepository.findById(dto.getBookingId())
-                .orElseThrow(() -> new RuntimeException("Booking not found"));
+        Booking booking = bookingRepository.findById(dto.getBookingId()).orElse(null);
+        if (Objects.isNull(booking)) {
+            throw new RuntimeException("Booking not found");
+        }
 
-        // ✅ нельзя платить за чужую бронь
+
         if (!booking.getUser().getId().equals(user.getId())) {
             throw new RuntimeException("Access denied");
         }
 
-        // ✅ нельзя платить если бронь отменена
+
         if ("CANCELLED".equals(booking.getStatus())) {
             throw new RuntimeException("Booking cancelled");
         }
 
         Payment payment = paymentRepository.findByBooking(booking).orElse(null);
 
-        // ✅ уже оплачено
+
         if (payment != null && "PAID".equals(payment.getStatus())) {
             throw new RuntimeException("Already paid");
         }
@@ -60,7 +63,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Payment saved = paymentRepository.save(payment);
 
-        // ✅ после оплаты: бронь становится PAID (а CONFIRMED делает менеджер)
+
         booking.setStatus("PAID");
         bookingRepository.save(booking);
 

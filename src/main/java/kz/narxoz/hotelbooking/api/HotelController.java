@@ -46,11 +46,11 @@ public class HotelController {
         return ResponseEntity.ok(updated);
     }
 
-    // ✅ добавлено
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = hotelService.delete(id); // ✅ сделай boolean в сервисе
+        boolean deleted = hotelService.delete(id);
         if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.noContent().build();
     }

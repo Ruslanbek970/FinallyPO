@@ -1,0 +1,303 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <!-- roles -->
+    <changeSet id="001-create-roles" author="team">
+        <createTable tableName="roles">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(50)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- users -->
+    <changeSet id="002-create-users" author="team">
+        <createTable tableName="users">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="email" type="varchar(120)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="password_hash" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="full_name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="phone" type="varchar(50)"/>
+            <column name="active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- users_roles -->
+    <changeSet id="003-create-users-roles" author="team">
+        <createTable tableName="users_roles">
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="users_roles"
+                       columnNames="user_id, role_id"
+                       constraintName="pk_users_roles"/>
+
+        <addForeignKeyConstraint baseTableName="users_roles" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_users_roles_user" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="users_roles" baseColumnNames="role_id"
+                                 referencedTableName="roles" referencedColumnNames="id"
+                                 constraintName="fk_users_roles_role" onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- cities -->
+    <changeSet id="004-create-cities" author="team">
+        <createTable tableName="cities">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="country" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- hotels -->
+    <changeSet id="005-create-hotels" author="team">
+        <createTable tableName="hotels">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="text"/>
+            <column name="rating" type="double precision" defaultValueNumeric="0.0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="city_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="manager_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="hotels" baseColumnNames="city_id"
+                                 referencedTableName="cities" referencedColumnNames="id"
+                                 constraintName="fk_hotels_city"/>
+
+        <addForeignKeyConstraint baseTableName="hotels" baseColumnNames="manager_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_hotels_manager"/>
+    </changeSet>
+
+    <!-- amenities -->
+    <changeSet id="006-create-amenities" author="team">
+        <createTable tableName="amenities">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(120)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- rooms -->
+    <changeSet id="007-create-rooms" author="team">
+        <createTable tableName="rooms">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="room_number" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="price_per_night" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="capacity" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="available" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hotel_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="rooms" baseColumnNames="hotel_id"
+                                 referencedTableName="hotels" referencedColumnNames="id"
+                                 constraintName="fk_rooms_hotel"/>
+    </changeSet>
+
+    <!-- rooms_amenities -->
+    <changeSet id="008-create-rooms-amenities" author="team">
+        <createTable tableName="rooms_amenities">
+            <column name="room_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amenity_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addPrimaryKey tableName="rooms_amenities"
+                       columnNames="room_id, amenity_id"
+                       constraintName="pk_rooms_amenities"/>
+
+        <addForeignKeyConstraint baseTableName="rooms_amenities" baseColumnNames="room_id"
+                                 referencedTableName="rooms" referencedColumnNames="id"
+                                 constraintName="fk_rooms_amenities_room" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="rooms_amenities" baseColumnNames="amenity_id"
+                                 referencedTableName="amenities" referencedColumnNames="id"
+                                 constraintName="fk_rooms_amenities_amenity" onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- bookings -->
+    <changeSet id="009-create-bookings" author="team">
+        <createTable tableName="bookings">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="check_in" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="check_out" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_price" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="room_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="bookings" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_bookings_user"/>
+
+        <addForeignKeyConstraint baseTableName="bookings" baseColumnNames="room_id"
+                                 referencedTableName="rooms" referencedColumnNames="id"
+                                 constraintName="fk_bookings_room"/>
+    </changeSet>
+
+    <!-- guests -->
+    <changeSet id="010-create-guests" author="team">
+        <createTable tableName="guests">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="first_name" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="last_name" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="document_number" type="varchar(120)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="booking_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="guests" baseColumnNames="booking_id"
+                                 referencedTableName="bookings" referencedColumnNames="id"
+                                 constraintName="fk_guests_booking" onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- payments -->
+    <changeSet id="011-create-payments" author="team">
+        <createTable tableName="payments">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="booking_id" type="bigint">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="method" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="paid_at" type="timestamp"/>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="payments" baseColumnNames="booking_id"
+                                 referencedTableName="bookings" referencedColumnNames="id"
+                                 constraintName="fk_payments_booking" onDelete="CASCADE"/>
+    </changeSet>
+
+    <!-- reviews -->
+    <changeSet id="012-create-reviews" author="team">
+        <createTable tableName="reviews">
+            <column name="id" type="bigserial">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="rating" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="comment" type="text"/>
+            <column name="created_at" type="timestamp" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="hotel_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="user_id"
+                                 referencedTableName="users" referencedColumnNames="id"
+                                 constraintName="fk_reviews_user" onDelete="CASCADE"/>
+
+        <addForeignKeyConstraint baseTableName="reviews" baseColumnNames="hotel_id"
+                                 referencedTableName="hotels" referencedColumnNames="id"
+                                 constraintName="fk_reviews_hotel" onDelete="CASCADE"/>
+    </changeSet>
+
+</databaseChangeLog>

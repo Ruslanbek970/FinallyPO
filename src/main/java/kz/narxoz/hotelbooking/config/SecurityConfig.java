@@ -10,7 +10,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -29,12 +29,7 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable())
-
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-                        .sessionFixation(sessionFixation -> sessionFixation.migrateSession())
-                )
+                .csrf(AbstractHttpConfigurer::disable)
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login", "/api/auth/logout").permitAll()
@@ -72,13 +67,13 @@ public class SecurityConfig {
     @Bean
     public AuthenticationManager authenticationManager() {
 
-        // ✅ В Spring Security 7 так:
+
         DaoAuthenticationProvider provider =
                 new DaoAuthenticationProvider(customUserDetailsService);
 
         provider.setPasswordEncoder(passwordEncoder());
 
-        // ✅ ProviderManager требует список провайдеров
+
         return new ProviderManager(List.of(provider));
     }
 

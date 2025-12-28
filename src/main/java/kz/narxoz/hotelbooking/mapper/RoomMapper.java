@@ -9,16 +9,24 @@ import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", imports = Amenity.class)
+@Mapper(componentModel = "spring")
 public interface RoomMapper {
 
     @Mapping(source = "hotel.id", target = "hotelId")
     @Mapping(source = "hotel.name", target = "hotelName")
-    @Mapping(target = "amenities",
-            expression = "java(room.getAmenities() == null ? java.util.List.of() : room.getAmenities().stream().map(Amenity::getName).toList())")
+    @Mapping(source = "amenities", target = "amenities")
     RoomResponseDto toDto(Room room);
 
     List<RoomResponseDto> toDtoList(List<Room> rooms);
 
     Room toEntity(RoomRequestDto dto);
+
+    default List<String> mapAmenities(List<Amenity> amenities) {
+        if (amenities == null) {
+            return List.of();
+        }
+        return amenities.stream()
+                .map(a -> a == null ? null : a.getName())
+                .toList();
+    }
 }

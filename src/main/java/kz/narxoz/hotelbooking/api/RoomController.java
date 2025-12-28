@@ -23,9 +23,9 @@ public class RoomController {
         return ResponseEntity.ok(roomService.getByHotel(hotelId));
     }
 
-    @GetMapping("/{id}") // ✅ часто нужен в Postman
+    @GetMapping("/{id}")
     public ResponseEntity<RoomResponseDto> getById(@PathVariable Long id) {
-        RoomResponseDto room = roomService.getById(id); // ✅ сделай метод в сервисе
+        RoomResponseDto room = roomService.getById(id);
         if (room == null) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.ok(room);
     }
@@ -52,11 +52,11 @@ public class RoomController {
         return ResponseEntity.ok().build();
     }
 
-    // ✅ добавлено
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','MANAGER')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
-        boolean deleted = roomService.delete(id); // ✅ сделай boolean в сервисе
+        boolean deleted = roomService.delete(id);
         if (!deleted) return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         return ResponseEntity.noContent().build();
     }

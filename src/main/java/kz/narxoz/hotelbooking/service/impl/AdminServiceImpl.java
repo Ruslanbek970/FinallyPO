@@ -30,8 +30,10 @@ public class AdminServiceImpl implements AdminService {
             throw new RuntimeException("User already exists");
         }
 
-        Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("ROLE_USER not found"));
+        Role userRole = roleRepository.findByName("ROLE_USER").orElse(null);
+        if (Objects.isNull(userRole)) {
+            throw new RuntimeException("ROLE_USER not found");
+        }
 
         User u = new User();
         u.setEmail(dto.getEmail());
