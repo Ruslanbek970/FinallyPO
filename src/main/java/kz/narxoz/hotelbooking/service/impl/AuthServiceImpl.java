@@ -27,15 +27,10 @@ public class AuthServiceImpl implements AuthService {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
         );
-
         SecurityContextHolder.getContext().setAuthentication(auth);
-
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-
         User user = (User) auth.getPrincipal();
-
-
         return userMapper.toLoginDto(user);
     }
 }

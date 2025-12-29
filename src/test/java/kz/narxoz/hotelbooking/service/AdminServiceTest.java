@@ -103,7 +103,7 @@ public class AdminServiceTest {
 
         when(userRepository.save(any(User.class))).thenReturn(saved);
 
-        // Важно: теперь сервис возвращает userMapper.toDto(saved)
+
         UserResponseDto mapped = UserResponseDto.builder()
                 .id(10L)
                 .email("manager@test.com")

@@ -88,7 +88,7 @@ public class UserServiceTest {
         role.setName("ROLE_USER");
         when(roleRepository.findByName("ROLE_USER")).thenReturn(Optional.of(role));
 
-        // чтобы не было предупреждения "might be null"
+
         doReturn("ENC").when(passwordEncoder).encode("123");
 
         User saved = new User();

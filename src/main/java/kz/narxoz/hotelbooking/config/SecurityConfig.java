@@ -24,18 +24,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-
         AuthenticationManagerBuilder builder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
         builder.userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
-
         http
                 .csrf(AbstractHttpConfigurer::disable)
-
-
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -77,7 +72,6 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder builder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-
         builder.userDetailsService(customUserDetailsService)
                 .passwordEncoder(passwordEncoder());
 
