@@ -1,20 +1,15 @@
 package kz.narxoz.hotelbooking.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import kz.narxoz.hotelbooking.dto.request.LoginRequestDto;
 import kz.narxoz.hotelbooking.dto.request.RegisterRequestDto;
 import kz.narxoz.hotelbooking.dto.response.LoginResponseDto;
 import kz.narxoz.hotelbooking.dto.response.UserResponseDto;
-import kz.narxoz.hotelbooking.model.User;
+import kz.narxoz.hotelbooking.service.AuthService;
 import kz.narxoz.hotelbooking.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -23,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController {
 
     private final UserService userService;
-    private final AuthenticationManager authenticationManager;
+    private final AuthService authService;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> register(@RequestBody RegisterRequestDto dto) {
@@ -32,29 +27,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto, HttpServletRequest request) {
-
-
-        Authentication auth = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
-        );
-
-
-        SecurityContextHolder.getContext().setAuthentication(auth);
-
-
-        HttpSession session = request.getSession(true);
-        session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
-
-        User user = (User) auth.getPrincipal();
-
-        return ResponseEntity.ok(
-                LoginResponseDto.builder()
-                        .id(user.getId())
-                        .email(user.getEmail())
-                        .fullName(user.getFullName())
-                        .roles(user.getRoles().stream().map(r -> r.getName()).toList())
-                        .build()
-        );
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto,
+                                                  HttpServletRequest request) {
+        return ResponseEntity.ok(authService.login(dto, request));
     }
 }
