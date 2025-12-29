@@ -46,15 +46,24 @@ public class User implements UserDetails {
     )
     private List<Role> roles;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles.stream()
-                .map(r -> (GrantedAuthority) r::getName)
-                .toList();
-    }
 
     @Override
-    public String getUsername() { return email; }
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() { return active; }
@@ -68,3 +77,4 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() { return active; }
 }
+

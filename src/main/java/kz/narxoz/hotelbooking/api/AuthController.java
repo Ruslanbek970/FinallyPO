@@ -34,28 +34,27 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto dto, HttpServletRequest request) {
 
+
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword())
         );
 
+
         SecurityContextHolder.getContext().setAuthentication(auth);
 
-        // создаём сессию, чтобы Postman получил JSESSIONID cookie
+
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
         User user = (User) auth.getPrincipal();
 
-        return ResponseEntity.ok(LoginResponseDto.builder()
-                .id(user.getId())
-                .email(user.getEmail())
-                .fullName(user.getFullName())
-                .roles(user.getRoles().stream().map(r -> r.getName()).toList())
-                .build());
-    }
-
-    @PostMapping("/logout")
-    public ResponseEntity<Void> logout() {
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(
+                LoginResponseDto.builder()
+                        .id(user.getId())
+                        .email(user.getEmail())
+                        .fullName(user.getFullName())
+                        .roles(user.getRoles().stream().map(r -> r.getName()).toList())
+                        .build()
+        );
     }
 }

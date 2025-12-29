@@ -88,17 +88,15 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+
     @Override
     public User getCurrentUserEntity() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (auth == null || auth instanceof AnonymousAuthenticationToken) return null;
 
-        Object principal = auth.getPrincipal();
-        if (principal instanceof User u) {
-            return u;
+        if (auth == null || auth instanceof AnonymousAuthenticationToken) {
+            return null;
         }
 
-        String email = auth.getName();
-        return userRepository.findByEmail(email).orElse(null);
+        return (User) auth.getPrincipal();
     }
 }
