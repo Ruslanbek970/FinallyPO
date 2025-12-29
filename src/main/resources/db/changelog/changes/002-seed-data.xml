@@ -16,7 +16,7 @@
     <changeSet id="014-seed-users" author="team">
         <insert tableName="users">
             <column name="email" value="ruslanbek@booking.kz"/>
-            <column name="password_hash" value="$2a$10$IJw.31OK/94KlMKQgQnZ2OcnpoxcnWqRf/DwRppDRJRfVDlYWAnr2"/>
+            <column name="password_hash" value="$2a$10$G1CJ/UYk5a.orpgS5KWwieEmzvlFeh.vzt1abZEHH9cT.7p.MqLk2"/>
             <column name="full_name" value="System Admin"/>
             <column name="phone" value="+7 777 111 11 11"/>
             <column name="active" valueBoolean="true"/>
@@ -32,7 +32,7 @@
 
         <insert tableName="users">
             <column name="email" value="maksat@booking.kz"/>
-            <column name="password_hash" value="$2a$10$fHtM0AH98QM7tJt.QSnXQefrV1/krMALGghr4xKCS9cpHI54y3pt2"/>
+            <column name="password_hash" value="$2a$10$G1CJ/UYk5a.orpgS5KWwieEmzvlFeh.vzt1abZEHH9cT.7p.MqLk2"/>
             <column name="full_name" value="Regular User"/>
             <column name="phone" value="+7 777 333 33 33"/>
             <column name="active" valueBoolean="true"/>

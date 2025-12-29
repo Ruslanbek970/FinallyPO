@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,7 +44,9 @@ public class AdminServiceImpl implements AdminService {
         u.setFullName(dto.getFullName());
         u.setPhone(dto.getPhone());
         u.setActive(true);
-        u.setRoles(List.of(userRole));
+
+
+        u.setRoles(new ArrayList<>(List.of(userRole)));
 
         User saved = userRepository.save(u);
 
@@ -54,6 +57,7 @@ public class AdminServiceImpl implements AdminService {
     public Boolean blockUser(Long id) {
         User u = userRepository.findById(id).orElse(null);
         if (Objects.isNull(u)) return false;
+
         u.setActive(false);
         userRepository.save(u);
         return true;
@@ -63,6 +67,7 @@ public class AdminServiceImpl implements AdminService {
     public Boolean deleteUser(Long id) {
         User u = userRepository.findById(id).orElse(null);
         if (Objects.isNull(u)) return false;
+
         userRepository.deleteById(id);
         return true;
     }
@@ -75,7 +80,8 @@ public class AdminServiceImpl implements AdminService {
         Role role = roleRepository.findByName(roleName).orElse(null);
         if (role == null) return false;
 
-        u.setRoles(List.of(role));
+        u.setRoles(new ArrayList<>(List.of(role)));
+
         userRepository.save(u);
         return true;
     }

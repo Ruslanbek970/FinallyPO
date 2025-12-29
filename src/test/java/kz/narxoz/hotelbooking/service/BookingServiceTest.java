@@ -8,7 +8,6 @@ import kz.narxoz.hotelbooking.model.Hotel;
 import kz.narxoz.hotelbooking.model.Room;
 import kz.narxoz.hotelbooking.model.User;
 import kz.narxoz.hotelbooking.repository.BookingRepository;
-import kz.narxoz.hotelbooking.repository.HotelRepository;
 import kz.narxoz.hotelbooking.repository.RoomRepository;
 import kz.narxoz.hotelbooking.service.impl.BookingServiceImpl;
 import org.junit.jupiter.api.Assertions;
@@ -26,11 +25,10 @@ public class BookingServiceTest {
     void createWhenUserNull() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         when(userService.getCurrentUserEntity()).thenReturn(null);
 
@@ -45,17 +43,18 @@ public class BookingServiceTest {
 
         verify(userService, times(1)).getCurrentUserEntity();
         verify(roomRepository, never()).findById(anyLong());
+        verify(bookingRepository, never()).save(any());
+        verify(bookingMapper, never()).toDto(any());
     }
 
     @Test
     void createSuccess() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         User user = new User();
         user.setId(1L);
@@ -77,6 +76,8 @@ public class BookingServiceTest {
 
         when(bookingRepository.save(any(Booking.class))).thenReturn(saved);
 
+        when(roomRepository.save(room)).thenReturn(room);
+
         BookingResponseDto response = new BookingResponseDto();
         response.setId(100L);
 
@@ -92,6 +93,9 @@ public class BookingServiceTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(100L, result.getId());
 
+        // room должен стать недоступным
+        Assertions.assertFalse(room.isAvailable());
+
         verify(userService, times(1)).getCurrentUserEntity();
         verify(roomRepository, times(1)).findById(5L);
         verify(bookingRepository, times(1)).save(any(Booking.class));
@@ -103,11 +107,10 @@ public class BookingServiceTest {
     void cancelWhenDifferentUser() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         User user = new User();
         user.setId(1L);
@@ -130,6 +133,7 @@ public class BookingServiceTest {
 
         Assertions.assertFalse(result);
 
+        verify(userService, times(1)).getCurrentUserEntity();
         verify(bookingRepository, times(1)).findById(10L);
         verify(bookingRepository, never()).save(any());
         verify(roomRepository, never()).save(any());
@@ -139,11 +143,10 @@ public class BookingServiceTest {
     void cancelSuccess() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         User user = new User();
         user.setId(1L);
@@ -159,13 +162,17 @@ public class BookingServiceTest {
         booking.setRoom(room);
 
         when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
-        when(bookingRepository.save(any(Booking.class))).thenReturn(booking);
+        when(bookingRepository.save(booking)).thenReturn(booking);
         when(roomRepository.save(room)).thenReturn(room);
 
         Boolean result = bookingService.cancel(10L);
 
         Assertions.assertTrue(result);
+        Assertions.assertEquals("CANCELLED", booking.getStatus());
+        Assertions.assertTrue(room.isAvailable());
 
+        verify(userService, times(1)).getCurrentUserEntity();
+        verify(bookingRepository, times(1)).findById(10L);
         verify(bookingRepository, times(1)).save(booking);
         verify(roomRepository, times(1)).save(room);
     }
@@ -174,11 +181,10 @@ public class BookingServiceTest {
     void getMyBookingsWhenUserNull() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         when(userService.getCurrentUserEntity()).thenReturn(null);
 
@@ -189,30 +195,158 @@ public class BookingServiceTest {
 
         verify(userService, times(1)).getCurrentUserEntity();
         verify(bookingRepository, never()).findAllByUser(any());
+        verify(bookingMapper, never()).toDtoList(any());
     }
 
+
     @Test
-    void getManagerBookingsWhenNoHotels() {
+    void getManagerBookingsWhenNoBookings() {
         BookingRepository bookingRepository = mock(BookingRepository.class);
         RoomRepository roomRepository = mock(RoomRepository.class);
-        HotelRepository hotelRepository = mock(HotelRepository.class);
         UserService userService = mock(UserService.class);
         BookingMapper bookingMapper = mock(BookingMapper.class);
 
-        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, hotelRepository, userService, bookingMapper);
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
 
         User manager = new User();
         manager.setId(1L);
 
         when(userService.getCurrentUserEntity()).thenReturn(manager);
-        when(hotelRepository.findAllByManager(manager)).thenReturn(List.of());
+        when(bookingRepository.findAllByRoom_Hotel_Manager(manager)).thenReturn(List.of());
+        when(bookingMapper.toDtoList(List.of())).thenReturn(List.of());
 
         List<BookingResponseDto> result = bookingService.getManagerBookings();
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(0, result.size());
 
-        verify(hotelRepository, times(1)).findAllByManager(manager);
-        verify(bookingRepository, never()).findAll();
+        verify(userService, times(1)).getCurrentUserEntity();
+        verify(bookingRepository, times(1)).findAllByRoom_Hotel_Manager(manager);
+        verify(bookingMapper, times(1)).toDtoList(List.of());
+    }
+
+    @Test
+    void confirmByManagerSuccess() {
+        BookingRepository bookingRepository = mock(BookingRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        UserService userService = mock(UserService.class);
+        BookingMapper bookingMapper = mock(BookingMapper.class);
+
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
+
+        User manager = new User();
+        manager.setId(1L);
+        when(userService.getCurrentUserEntity()).thenReturn(manager);
+
+        User hotelManager = new User();
+        hotelManager.setId(1L);
+
+        Hotel hotel = new Hotel();
+        hotel.setManager(hotelManager);
+
+        Room room = new Room();
+        room.setHotel(hotel);
+
+        Booking booking = new Booking();
+        booking.setId(10L);
+        booking.setRoom(room);
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(booking)).thenReturn(booking);
+
+        Boolean result = bookingService.confirmByManager(10L);
+
+        Assertions.assertTrue(result);
+        Assertions.assertEquals("CONFIRMED", booking.getStatus());
+
+        verify(bookingRepository, times(1)).save(booking);
+    }
+
+    @Test
+    void cancelByManagerSuccess() {
+        BookingRepository bookingRepository = mock(BookingRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        UserService userService = mock(UserService.class);
+        BookingMapper bookingMapper = mock(BookingMapper.class);
+
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
+
+        User manager = new User();
+        manager.setId(1L);
+        when(userService.getCurrentUserEntity()).thenReturn(manager);
+
+        User hotelManager = new User();
+        hotelManager.setId(1L);
+
+        Hotel hotel = new Hotel();
+        hotel.setManager(hotelManager);
+
+        Room room = new Room();
+        room.setAvailable(false);
+        room.setHotel(hotel);
+
+        Booking booking = new Booking();
+        booking.setId(10L);
+        booking.setRoom(room);
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
+        when(bookingRepository.save(booking)).thenReturn(booking);
+        when(roomRepository.save(room)).thenReturn(room);
+
+        Boolean result = bookingService.cancelByManager(10L);
+
+        Assertions.assertTrue(result);
+        Assertions.assertEquals("CANCELLED", booking.getStatus());
+        Assertions.assertTrue(room.isAvailable());
+
+        verify(bookingRepository, times(1)).save(booking);
+        verify(roomRepository, times(1)).save(room);
+    }
+
+    @Test
+    void getByIdWhenNotFound() {
+        BookingRepository bookingRepository = mock(BookingRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        UserService userService = mock(UserService.class);
+        BookingMapper bookingMapper = mock(BookingMapper.class);
+
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.empty());
+
+        BookingResponseDto result = bookingService.getById(10L);
+
+        Assertions.assertNull(result);
+
+        verify(bookingRepository, times(1)).findById(10L);
+        verify(bookingMapper, never()).toDto(any());
+    }
+
+    @Test
+    void deleteSuccess() {
+        BookingRepository bookingRepository = mock(BookingRepository.class);
+        RoomRepository roomRepository = mock(RoomRepository.class);
+        UserService userService = mock(UserService.class);
+        BookingMapper bookingMapper = mock(BookingMapper.class);
+
+        BookingService bookingService = new BookingServiceImpl(bookingRepository, roomRepository, userService, bookingMapper);
+
+        Room room = new Room();
+        room.setAvailable(false);
+
+        Booking booking = new Booking();
+        booking.setId(10L);
+        booking.setRoom(room);
+
+        when(bookingRepository.findById(10L)).thenReturn(Optional.of(booking));
+        when(roomRepository.save(room)).thenReturn(room);
+
+        boolean result = bookingService.delete(10L);
+
+        Assertions.assertTrue(result);
+        Assertions.assertTrue(room.isAvailable());
+
+        verify(roomRepository, times(1)).save(room);
+        verify(bookingRepository, times(1)).deleteById(10L);
     }
 }
