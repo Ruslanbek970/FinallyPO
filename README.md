@@ -59,17 +59,12 @@ docker compose up -d main-db
 ## Как запустить через Docker Compose
 В проекте есть `docker-compose.yml` с двумя сервисами:
 - `main-db` — БД для приложения, проброшена на порт **2345**;
-- `test-db` — БД для тестов, проброшена на порт **2346**.
+
 
 Команды:
 ```bash
 cd FinallyPO
-# поднять только основную БД
-docker compose up -d main-db
-
-# поднять обе БД
-# (например, если хотите запускать тесты с профилем test)
-docker compose up -d main-db test-db
+docker compose up -d 
 
 # остановить
 # docker compose down
@@ -90,18 +85,7 @@ spring.liquibase.change-log=classpath:db/changelog/db.changelog-master.xml
 spring.liquibase.enabled=true
 ```
 
-### `src/test/resources/application-test.properties`
-```properties
-spring.datasource.url=jdbc:postgresql://localhost:2346/postgres
-spring.datasource.username=postgres
-spring.datasource.password=postgres
 
-spring.jpa.hibernate.ddl-auto=none
-spring.jpa.show-sql=true
-
-spring.liquibase.change-log=classpath:db/changelog/db.changelog-test.xml
-spring.liquibase.enabled=true
-```
 
 #### Переменные окружения
 В проекте не найдено использование переменных окружения для конфигурации (например, `${...}` в `application.properties/yml`).
